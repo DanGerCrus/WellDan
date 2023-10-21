@@ -17,9 +17,11 @@ return new class extends Migration
             $table->string('photo');
             $table->text('description');
             $table->unsignedInteger('price');
+            $table->unsignedBigInteger('category_id');
             $table->timestamps();
             $table->softDeletes();
-        });
+
+            $table->foreign('category_id')->on('products_categories')->references('id');        });
     }
 
     /**

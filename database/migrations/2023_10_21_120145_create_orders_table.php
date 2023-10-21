@@ -20,7 +20,7 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->foreign('creator_id')->on('users')->references('id');
-            $table->foreign('status_id')->on('statuses')->references('id');
+            $table->foreign('status_id')->on('orders_statuses')->references('id');
 
         });
     }
