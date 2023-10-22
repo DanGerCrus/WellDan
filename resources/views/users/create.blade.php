@@ -40,7 +40,7 @@
             </div>
 
             <div  class="mt-4">
-                <x-input-label for="father_name" :value="__('Отчетсво')" />
+                <x-input-label for="father_name" :value="__('Отчество')" />
                 <x-text-input id="father_name" name="father_name" type="text" class="mt-1 block w-full" required autofocus autocomplete="father_name" />
                 <x-input-error class="mt-2" :messages="$errors->get('father_name')" />
             </div>

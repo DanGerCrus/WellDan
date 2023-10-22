@@ -3,17 +3,34 @@
         @csrf
 
         <!-- Fio -->
-        <div>
-            <x-input-label for="fio" :value="__('ФИО')" />
-            <x-text-input id="fio" class="block mt-1 w-full" type="text" name="fio" :value="old('fio')" required autofocus autocomplete="fio" />
-            <x-input-error :messages="$errors->get('fio')" class="mt-2" />
+        <div  class="mt-4">
+            <x-input-label for="last_name" :value="__('Фамилия')" />
+            <x-text-input id="last_name" name="last_name" type="text" class="mt-1 block w-full" required autofocus autocomplete="last_name" />
+            <x-input-error class="mt-2" :messages="$errors->get('last_name')" />
         </div>
 
-        <!-- Login -->
-        <div>
-            <x-input-label for="login" :value="__('Логин')" />
-            <x-text-input id="login" class="block mt-1 w-full" type="text" name="login" :value="old('login')" required autofocus autocomplete="login" />
-            <x-input-error :messages="$errors->get('login')" class="mt-2" />
+        <div  class="mt-4">
+            <x-input-label for="first_name" :value="__('Имя')" />
+            <x-text-input id="first_name" name="first_name" type="text" class="mt-1 block w-full" required autofocus autocomplete="first_name" />
+            <x-input-error class="mt-2" :messages="$errors->get('first_name')" />
+        </div>
+
+        <div  class="mt-4">
+            <x-input-label for="father_name" :value="__('Отчество')" />
+            <x-text-input id="father_name" name="father_name" type="text" class="mt-1 block w-full" required autofocus autocomplete="father_name" />
+            <x-input-error class="mt-2" :messages="$errors->get('father_name')" />
+        </div>
+
+        <div  class="mt-4">
+            <x-input-label for="phone" :value="__('Номер телефона')" />
+            <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" min="1" required autocomplete="phone" />
+            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+        </div>
+
+        <div  class="mt-4">
+            <x-input-label for="age" :value="__('Возраст')" />
+            <x-text-input id="age" name="age" type="number" class="mt-1 block w-full" min="1" required autocomplete="age" />
+            <x-input-error class="mt-2" :messages="$errors->get('age')" />
         </div>
 
         <!-- Email Address -->
@@ -57,3 +74,12 @@
         </div>
     </form>
 </x-guest-layout>
+<script src="{{asset('js/imask.js')}}"></script>
+<script>
+    IMask(
+        document.getElementById('phone'),
+        {
+            mask: '+{7}(000)000-00-00'
+        }
+    )
+</script>
