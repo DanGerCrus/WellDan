@@ -27,10 +27,10 @@
     <div class="container mx-auto px-4 my-5">
         <table class="table-auto w-full">
             <tr>
-                <th class="w-1/12 border-2 border-gray-400 px-4 py-2">#</th>
+                <th class="w-1/12 border-2 border-gray-400 px-4 py-2">№</th>
                 <th class="w-1/6 border-2 border-gray-400 px-4 py-2">ФИО пользователя</th>
                 <th class="w-1/6 border-2 border-gray-400 px-4 py-2">Телефон</th>
-                <th class="w-1/6 border-2 border-gray-400 px-4 py-2">Возраст</th>
+                <th class="w-1/9 border-2 border-gray-400 px-4 py-2">Возраст</th>
                 <th class="w-1/6 border-2 border-gray-400 px-4 py-2">Почта</th>
                 <th class="w-1/6 border-2 border-gray-400 px-4 py-2">Роли</th>
                 <th class="w-1/3 border-2 border-gray-400 px-4 py-2">Действия</th>
