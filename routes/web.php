@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('permission:product-edit')->group(function () {
-        Route::get('/products/create', [ProductsController::class, 'edit'])->name('products.create');
+        Route::get('/products/create', [ProductsController::class, 'create'])->name('products.create');
         Route::get('/products/{id}/edit', [ProductsController::class, 'edit'])
             ->whereNumber('id')
             ->name('products.edit');

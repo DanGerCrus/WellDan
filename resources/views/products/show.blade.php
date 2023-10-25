@@ -12,7 +12,11 @@
                         alt="{{$product->name}}"
                     >
                     <x-item-p label="Название: " value="{{$product->name}}"></x-item-p>
-                    <x-item-p label="Описание: " value="{{$product->description}}"></x-item-p>
+                    <x-item-p label="Описание: " >
+                        <x-slot name="value">
+                            {{$product->description}}
+                        </x-slot>
+                    </x-item-p>
                     <x-item-p label="Стоимость: " value="{{$product->price}}"></x-item-p>
                     <x-item-p label="Тип товара: " value="{{$product->category->name}}"></x-item-p>
 

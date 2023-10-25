@@ -8,7 +8,7 @@
                 <div class="flex flex-col justify-center items-start gap-2">
                     <x-item-p label="Название: " value="{{$category->name}}"></x-item-p>
                     <div class="flex flex-row w-full justify-center items-center gap-2">
-                        <x-primary-a :href="route('products_categories.edit', $category->id)">{{__('Редактировать')}}</x-primary-a>
+                        <x-primary-a :href="route('categories.edit', $category->id)">{{__('Редактировать')}}</x-primary-a>
                         <x-danger-button
                             type="button"
                             x-data=""

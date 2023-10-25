@@ -110,6 +110,6 @@ class ProductsCategoriesController extends Controller
         Product::where('category_id', '=', $id)->delete();
         ProductCategory::find($id)->delete();
 
-        return redirect()->route('products_categories.index');
+        return redirect()->route('categories.index');
     }
 }
