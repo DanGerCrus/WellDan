@@ -13,7 +13,7 @@
     ][$maxWidth];
 @endphp
 <div
-    class="{{$maxWidth}} overflow-hidden mx-auto lg:mx-0 rounded-lg shadow-lg bg-white"
+    class="{{$maxWidth}} overflow-hidden mx-auto lg:mx-0 rounded-lg shadow-lg bg-white flex flex-col justify-between"
 >
     <div
         class="px-4 py-2 bg-gray-900"

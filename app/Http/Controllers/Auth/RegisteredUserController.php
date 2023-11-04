@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RegisteredUserController extends Controller
 {
@@ -49,6 +51,17 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+
+        $userRole = Role::query()->where('name', '=', 'user')->first();
+
+        if (empty($userRole)) {
+            $userRole = Role::create(['name' => 'user']);
+            $productList = Permission::where('name', '=', 'product-list')->pluck('id', 'id')->first();
+            $userRole->syncPermissions($productList);
+        }
+
+        $user->assignRole([$userRole->id]);
 
         event(new Registered($user));
 

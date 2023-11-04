@@ -21,7 +21,10 @@
                     <x-item-p label="Тип товара: " value="{{$product->category->name}}"></x-item-p>
 
                     <div class="flex flex-row w-full justify-center items-center gap-2">
+                        @can('product-edit')
                         <x-primary-a :href="route('products.edit', $product->id)">{{__('Редактировать')}}</x-primary-a>
+                        @endcan
+                        @can('product-delete')
                         <x-danger-button
                             type="submit"
                             x-data=""
@@ -29,6 +32,7 @@
                         >
                             {{__('Удалить')}}
                         </x-danger-button>
+                        @endcan
                     </div>
                 </div>
             </div>

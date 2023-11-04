@@ -12,6 +12,7 @@
                     <x-item-p label="Статус" value="{{$order->status->name}}"></x-item-p>
                     <x-item-p label="Создатель" value="{{$order->creator->email}}"></x-item-p>
                     <div class="flex flex-row w-full justify-center items-center gap-2">
+                        <x-primary-a :href="route('orders.edit', $order->id)">{{__('Редактировать')}}</x-primary-a>
                         <x-danger-button
                             type="button"
                             x-data=""

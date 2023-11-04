@@ -8,7 +8,10 @@
                 <div class="flex flex-col justify-center items-start gap-2">
                     <x-item-p label="Название: " value="{{$category->name}}"></x-item-p>
                     <div class="flex flex-row w-full justify-center items-center gap-2">
+                        @can('category-edit')
                         <x-primary-a :href="route('categories.edit', $category->id)">{{__('Редактировать')}}</x-primary-a>
+                        @endcan
+                        @can('category-delete')
                         <x-danger-button
                             type="button"
                             x-data=""
@@ -16,6 +19,7 @@
                         >
                             {{__('Удалить')}}
                         </x-danger-button>
+                        @endcan
                     </div>
                 </div>
             </div>
