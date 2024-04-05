@@ -23,16 +23,78 @@
         >
             {{$product->name}}
         </h1>
-        <p
-            class="mt-1 text-sm text-gray-200"
-        >
-            {{$product->category->name}}
-        </p>
+        <div class="flex flex-row justify-between items-center">
+            <p
+                class="mt-1 text-sm text-gray-200"
+            >
+                {{$product->category->name}}
+            </p>
+            @auth
+                @if(!empty($isOrder))
+                    <x-btn x-data=""
+                           x-on:click.prevent="$dispatch('open-modal', 'modal_addIngredient{{$product->id}}')"
+                           body="info"
+                           type="button"
+                    >В заказ</x-btn>
+                    <x-modal id="modal_addIngredient{{$product->id}}" name="modal_addIngredient{{$product->id}}" focusable>
+                        <div class="p-5">
+                            <div
+                                class="font-semibold text-xl text-gray-800 leading-tight"
+                            >
+                                <input type="hidden" name="product_id" value="{{$product->id}}">
+                                <div class="flex flex-row items-center">
+                                    <div class="pr-5">
+                                        <x-input-label
+                                            for="count"
+                                            :value="__('Количество')"
+                                        />
+                                        <x-text-input
+                                            id="count"
+                                            name="count"
+                                            type="number"
+                                            class="mt-1 block"
+                                            min="1"
+                                            value="1"
+                                            required
+                                            autofocus
+                                        />
+                                    </div>
+                                    <span class="pt-4">x {{$product->name}}</span>
+                                </div>
+                            </div>
+                            <img
+                                class="object-cover w-full h-96 mt-2" src="{{$product->photo}}"
+                                alt="{{$product->name}}"
+                            >
+                            <x-product-ingredient-card key="0" clone="1" :ingredients="$ingredients"></x-product-ingredient-card>
+                            <div class="py-4">
+                                <h1 class="font-semibold text-xl text-gray-800 leading-tight">Добавить</h1>
+
+                                <div class="py-4 flex flex-col justify-items-stretch container-line-Ingredient">
+                                    <x-product-ingredient-card key="0" :ingredientCount="0" :ingredients="$ingredients"></x-product-ingredient-card>
+                                </div>
+                            </div>
+
+                            <div class="m-6 flex justify-end">
+                                <x-green-button class="addIngredient mr-2">
+                                    {{ __('Добавить') }}
+                                </x-green-button>
+                                <x-secondary-button x-on:click="$dispatch('close')">
+                                    {{ __('Отмена') }}
+                                </x-secondary-button>
+                            </div>
+                        </div>
+                    </x-modal>
+                @else
+                    <x-in-basket :id="$product->id" :route="route('products.index')"></x-in-basket>
+                @endif
+            @endauth
+        </div>
     </div>
 
     <a href="{{$welcome ? '#menu' : route('products.show', $product->id)}}">
         <img
-            class="object-cover w-full h-48 mt-2" src="{{$product->photo}}"
+            class="object-cover w-full h-48" src="{{$product->photo}}"
             alt="{{$product->name}}"
         >
     </a>

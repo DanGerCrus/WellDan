@@ -4,6 +4,7 @@ namespace App\View\Components;
 
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 
 class ProductCard extends Component
@@ -12,7 +13,9 @@ class ProductCard extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public object $product
+        public object $product,
+        public Collection $ingredients,
+        public bool $isOrder = false,
     )
     {
         //

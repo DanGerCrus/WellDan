@@ -12,17 +12,18 @@ class OrderStatusSeeder extends Seeder
      */
     public function run(): void
     {
-        $statuses=[
+        $statuses = [
             'Заказ обрабатывается',
+            'Заказ принят',
+            'Заказ готовится',
             'Заказ готов',
-            'Заказ отправлен',
-            'Заказ ожидает',
+            'Заказ в пути',
             'Заказ получен'
         ];
 
         foreach ($statuses as $status){
             OrderStatus::create([
-                'name'=>$status
+                'name' => $status
             ]);
         }
     }

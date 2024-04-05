@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\ProductIngredient;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -25,7 +26,6 @@ class ProductSeeder extends Seeder
                 'name' => 'Супы'
             ],
         ];
-
         $products = [
             [
                 'name' => 'Бургер от Дани',
@@ -49,13 +49,37 @@ class ProductSeeder extends Seeder
                 'photo' => '/products/3/img.png',
             ],
         ];
+        $ingredients = [
+            [
+                'ingredient_id' => 1,
+                'product_id' => 1,
+                'count' => 1,
+            ],
+            [
+                'ingredient_id' => 2,
+                'product_id' => 1,
+                'count' => 1,
+            ],
+            [
+                'ingredient_id' => 1,
+                'product_id' => 2,
+                'count' => 1,
+            ],
+            [
+                'ingredient_id' => 2,
+                'product_id' => 2,
+                'count' => 1,
+            ],
+        ];
 
         foreach ($categories as $category) {
             ProductCategory::query()->create($category);
         }
-
         foreach ($products as $product) {
             Product::query()->create($product);
+        }
+        foreach ($ingredients as $ingredient) {
+            ProductIngredient::query()->create($ingredient);
         }
     }
 }

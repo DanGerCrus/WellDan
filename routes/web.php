@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\BasketController;
 use App\Http\Controllers\FilesController;
+use App\Http\Controllers\IngredientsController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductsCategoriesController;
 use App\Http\Controllers\ProductsController;
@@ -20,8 +22,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [ProductsController::class, 'welcome'])->name('welcome');
-Route::post('/', [ProductsController::class, 'welcome'])->name('welcome');
+Route::get('/', [ProductsController::class, 'index'])->name('welcome');
+Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
 
 Route::get('{upload}', [FilesController::class, 'get'])->where('upload', '(upload\/)(.*)');
 
@@ -34,7 +36,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class);
 
     Route::middleware('permission:product-list')->group(function () {
-        Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
         Route::get('/products/{id}', [ProductsController::class, 'show'])
             ->whereNumber('id')
             ->name('products.show');
@@ -56,8 +57,12 @@ Route::middleware('auth')->group(function () {
         ->delete('/products/{id}', [ProductsController::class, 'destroy'])
         ->whereNumber('id')
         ->name('products.destroy');
+    Route::get('/basket', [BasketController::class, 'index'])->name('basket.index');
+    Route::post('/products/{id}/basket', [BasketController::class, 'store'])->whereNumber('id')->name('basket.store');
+    Route::patch('/basket', [BasketController::class, 'update'])->name('basket.update');
 
     Route::resource('categories', ProductsCategoriesController::class);
+    Route::resource('ingredients', IngredientsController::class);
     Route::middleware('permission:order-edit')->resource('orders', OrderController::class);
 });
 

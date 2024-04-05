@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\FilterTrait;
+use App\Http\OrderTrait;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -16,6 +18,30 @@ use Illuminate\Validation\Rules;
 
 class UserController extends Controller
 {
+    use OrderTrait;
+    use FilterTrait;
+
+    public static array $orderFields = [
+        'first_name',
+        'last_name',
+        'father_name'
+    ];
+
+    public static array $filterFields = [
+        'first_name' => [
+            'type' => '',
+            'action' => 'like'
+        ],
+        'last_name' => [
+            'type' => '',
+            'action' => 'like'
+        ],
+        'father_name' => [
+            'type' => '',
+            'action' => 'like'
+        ],
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -25,9 +51,16 @@ class UserController extends Controller
      */
     public function index(Request $request): Response
     {
-        $data = User::orderBy('id', 'DESC')->get();
+        self::setDefaultOrder(['id' => 'DESC']);
+        $users = User::query();
+        $users = self::filterData($request, $users);
+        $users = self::orderData($request, $users);
+        $users = $users->paginate(6);
+
         return response()->view('users.index', [
-            'data' => $data,
+            'data' => $users,
+            'order' => self::orderGenerate($request),
+            'filter' => self::filterGenerate($request)
         ]);
     }
 

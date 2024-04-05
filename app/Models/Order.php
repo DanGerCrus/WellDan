@@ -21,6 +21,11 @@ class Order extends Model
         return $this->belongsTo(User::class, 'creator_id', 'id', 'users');
     }
 
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'client_id', 'id', 'users');
+    }
+
     public function status(): BelongsTo
     {
         return $this->belongsTo(OrderStatus::class, 'status_id', 'id');

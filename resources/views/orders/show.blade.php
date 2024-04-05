@@ -10,7 +10,57 @@
                     <x-item-p label="Номер" value="{{$order->id}}"></x-item-p>
                     <x-item-p label="Дата" value="{{\Illuminate\Support\Carbon::parse($order->date_order)->format('d.m.Y H:i')}}"></x-item-p>
                     <x-item-p label="Статус" value="{{$order->status->name}}"></x-item-p>
-                    <x-item-p label="Создатель" value="{{$order->creator->email}}"></x-item-p>
+                    <div class="text-gray-800">
+                        <p class="font-bold">
+                            Создатель :
+                        </p>
+                        <span>
+                            @can('user_list')
+                                <x-a body="gray" href="{{ route('users.show', $order->creator->id) }}">
+                                    {{ $order->creator->last_name . ' ' . $order->creator->first_name . ' ' . $order->creator->father_name}}
+                                </x-a>
+                            @else
+                                {{ $order->creator->last_name . ' ' . $order->creator->first_name . ' ' . $order->creator->father_name}}
+                            @endcan
+                        </span>
+                    </div>
+                    <div class="text-gray-800">
+                        <p class="font-bold">
+                            Клиент :
+                        </p>
+                        <span>
+                            @if(!empty($order->client))
+                                @can('user_list')
+                                    <x-a body="gray" href="{{ route('users.show', $order->client->id) }}">
+                                        {{ $order->client->last_name . ' ' . $order->client->first_name . ' ' . $order->client->father_name}}
+                                    </x-a>
+                                @else
+                                    {{ $order->client->last_name . ' ' . $order->client->first_name . ' ' . $order->client->father_name}}
+                                @endcan
+                            @else
+                                <x-no-data font="font-normal"></x-no-data>
+                            @endif
+                        </span>
+                    </div>
+                    <div class="text-gray-800">
+                        <p class="font-bold">Состав:</p>
+                        @foreach($order->products as $product)
+                            <span>
+                                {{$product->count}} x {{$product->product->name}} @if($product->ingredients->isNotEmpty()):@endif
+                            </span>
+                            @if($product->ingredients->isNotEmpty())
+                                @foreach($product->ingredients as $ingredient)
+                                    <p class="ml-2">
+                                        <span>+ {{$ingredient->count}} x </span>
+                                        <label class="rounded px-1 bg-green-500 mr-0.5">
+                                            {{ $ingredient->ingredient->name }}
+                                        </label>
+                                        <span>;</span>
+                                    </p>
+                                @endforeach
+                            @endif
+                        @endforeach
+                    </div>
                     <div class="flex flex-row w-full justify-center items-center gap-2">
                         <x-primary-a :href="route('orders.edit', $order->id)">{{__('Редактировать')}}</x-primary-a>
                         <x-danger-button

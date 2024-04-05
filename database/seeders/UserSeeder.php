@@ -15,13 +15,16 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $permissions=[
+        $permissions = [
             'product-list',
             'product-edit',
             'product-delete',
             'category-list',
             'category-edit',
             'category-delete',
+            'ingredient-list',
+            'ingredient-edit',
+            'ingredient-delete',
             'order-edit',
             'role-list',
             'role-create',

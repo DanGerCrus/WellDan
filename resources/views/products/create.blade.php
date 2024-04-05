@@ -13,6 +13,7 @@
             <section
                     class="max-w-4xl p-6 mx-auto bg-white rounded-md shadow-md"
             >
+                <x-product-ingredient-card key="0" clone="1" :ingredients="$ingredients"></x-product-ingredient-card>
                 <form
                         method="post"
                         action="{{ route('products.store') }}"
@@ -123,6 +124,14 @@
                         />
                     </div>
 
+                    <div class="py-4">
+                        <h1 class="font-semibold text-xl text-gray-800 leading-tight">Ингредиенты</h1>
+
+                        <div class="py-4 flex flex-col justify-items-stretch container-line-Ingredient">
+                            <x-product-ingredient-card key="0" :ingredients="$ingredients"></x-product-ingredient-card>
+                        </div>
+                    </div>
+
                     <div
                             class="flex items-center gap-4"
                     >
@@ -145,3 +154,9 @@
         </div>
     </div>
 </x-app-layout>
+<script src="{{asset('/js/ProductIngredientForm.js')}}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        new ProductIngredientForm();
+    })
+</script>

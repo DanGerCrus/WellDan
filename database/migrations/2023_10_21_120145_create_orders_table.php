@@ -16,10 +16,12 @@ return new class extends Migration
             $table->dateTime('date_order');
             $table->unsignedBigInteger('status_id');
             $table->unsignedBigInteger('creator_id');
+            $table->unsignedBigInteger('client_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('creator_id')->on('users')->references('id');
+            $table->foreign('client_id')->on('users')->references('id');
             $table->foreign('status_id')->on('orders_statuses')->references('id');
 
         });

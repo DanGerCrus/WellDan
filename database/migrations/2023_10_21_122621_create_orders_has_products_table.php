@@ -18,8 +18,6 @@ return new class extends Migration
             $table->unsignedInteger('count');
             $table->timestamps();
 
-            $table->unique(['order_id', 'product_id']);
-
             $table->foreign('order_id')->on('orders')->references('id');
             $table->foreign('product_id')->on('products')->references('id');
 

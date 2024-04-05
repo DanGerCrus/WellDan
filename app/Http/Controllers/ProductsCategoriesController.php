@@ -2,18 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\FilterTrait;
+use App\Http\OrderTrait;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 
 class ProductsCategoriesController extends Controller
 {
+    use OrderTrait;
+    use FilterTrait;
+
+    public static array $orderFields = [
+        'name',
+    ];
+
+    public static array $filterFields = [
+        'name' => [
+            'type' => '',
+            'action' => 'like'
+        ],
+    ];
+
     public function __construct()
     {
         $this->middleware('permission:category-list|category-create|category-edit|category-delete', ['only' => ['index', 'store']]);
@@ -22,15 +35,20 @@ class ProductsCategoriesController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * @param Request $request
+     * @return Response
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $categories = ProductCategory::orderBy('name')
-            ->get();
+        $categories = ProductCategory::query();
+        $categories = self::filterData($request, $categories);
+        $categories = self::orderData($request, $categories);
+        $categories = $categories->paginate(6);
 
         return response()->view('products_categories.index', [
-            'categories' => $categories
+            'categories' => $categories,
+            'filter' => self::filterGenerate($request),
+            'order' => self::orderGenerate($request)
         ]);
     }
 
@@ -61,7 +79,8 @@ class ProductsCategoriesController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @param int $id - идентификатор хуя
+     * @return Response
      */
     public function show(int $id): Response
     {

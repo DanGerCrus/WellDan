@@ -10,19 +10,28 @@
         <div
             class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6"
         >
+            <x-order-product-form key="0" clone="1" :products="$products"
+                                  :ingredients="$ingredients"></x-order-product-form>
+            <x-product-ingredient-card productKey="0" key="0" clone="1"
+                                       :ingredients="$ingredients"></x-product-ingredient-card>
             <section
                 class="max-w-4xl p-6 mx-auto bg-white rounded-md shadow-md"
             >
-                <x-order-product-card key="0" clone="1" :products="$products"></x-order-product-card>
                 <form method="post" action="{{ route('orders.update', $order->id) }}">
                     @csrf
                     @method('patch')
-
                     <h1 class="font-semibold text-xl text-gray-800 leading-tight">
                         <p>№{{$order->id}}</p>
                         <p>Дата: {{\Illuminate\Support\Carbon::parse($order->date_order)->format('d.m.Y H:i')}}</p>
                         <p>Статус: {{$order->status->name}}</p>
-                        <p>Создал: {{$order->creator->email}}</p>
+                        <p>Клиент:
+                            @if(!empty($order->client))
+                                {{ $order->client->last_name . ' ' . $order->client->first_name . ' ' . $order->client->father_name}}
+                            @else
+                                <x-no-data font="font-normal"></x-no-data>
+                            @endif
+                        </p>
+                        <p>Создал: {{ $order->creator->last_name . ' ' . $order->creator->first_name . ' ' . $order->creator->father_name}}</p>
                     </h1>
                     <div class="py-4">
                         <x-input-label
@@ -42,19 +51,20 @@
                             :messages="$errors->get('status_id')"
                         />
                     </div>
-
-                    <h1 class="font-semibold text-xl text-gray-800 leading-tight">Продукты</h1>
-
-                    <div class="py-4 flex flex-col justify-items-stretch container-line-Order">
-                        @if($order->products->isNotEmpty())
-                            @foreach($order->products as $key => $product)
-                                <x-order-product-card :type="$key" :key="$key" :productID="$product->product_id" :productCount="$product->count" :products="$products"></x-order-product-card>
-                            @endforeach
-                        @else
-                            <x-order-product-card key="0" :products="$products"></x-order-product-card>
-                        @endif
+                    <h1 class="font-semibold text-xl text-gray-800 leading-tight">Товары</h1>
+                    <div class="container-line-ProductOrder">
+                        @foreach($order->products as $key => $product)
+                            <x-order-product-form
+                                :type="$key"
+                                :key="$key"
+                                :products="$products"
+                                :ingredients="$ingredients"
+                                :productIngredients="$product->ingredients"
+                                :productCount="$product->count"
+                                :productID="$product->product_id"
+                            ></x-order-product-form>
+                        @endforeach
                     </div>
-
                     <div
                         class="flex items-center gap-4"
                     >
@@ -62,7 +72,7 @@
                             {{ __('Сохранить') }}
                         </x-primary-button>
 
-                        @if (session('status') === 'order-updated')
+                        @if (session('status') === 'order-created')
                             <p
                                 x-data="{ show: true }"
                                 x-show="show"
@@ -78,8 +88,10 @@
     </div>
 </x-app-layout>
 <script src="{{asset('/js/OrderForm.js')}}"></script>
+<script src="{{asset('/js/ProductIngredientForm.js')}}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         new OrderForm();
+        new ProductIngredientForm();
     })
 </script>

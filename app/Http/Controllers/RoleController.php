@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\FilterTrait;
+use App\Http\OrderTrait;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -12,6 +14,20 @@ use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
 {
+    use FilterTrait;
+    use OrderTrait;
+
+    public static array $orderFields = [
+        'name',
+    ];
+
+    public static array $filterFields = [
+        'name' => [
+            'type' => '',
+            'action' => 'like'
+        ],
+    ];
+
     /**
      *
      */
@@ -30,9 +46,16 @@ class RoleController extends Controller
      */
     public function index(Request $request): Response
     {
-        $roles = Role::orderBy('id', 'DESC')->get();
+        self::setDefaultOrder(['id' => 'DESC']);
+        $roles = Role::query();
+        $roles = self::filterData($request, $roles);
+        $roles = self::orderData($request, $roles);
+        $roles = $roles->paginate(6);
+
         return response()->view('roles.index', [
             'roles' => $roles,
+            'order' => self::orderGenerate($request),
+            'filter' => self::filterGenerate($request)
         ]);
     }
 

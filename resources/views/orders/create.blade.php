@@ -10,19 +10,21 @@
         <div
             class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6"
         >
+            <x-order-product-form key="0" clone="1" :products="$products"
+                                  :ingredients="$ingredients"></x-order-product-form>
+            <x-product-ingredient-card productKey="0" key="0" clone="1"
+                                       :ingredients="$ingredients"></x-product-ingredient-card>
             <section
                 class="max-w-4xl p-6 mx-auto bg-white rounded-md shadow-md"
             >
-                <x-order-product-card key="0" clone="1" :products="$products"></x-order-product-card>
                 <form method="post" action="{{ route('orders.store') }}">
                     @csrf
 
-                    <h1 class="font-semibold text-xl text-gray-800 leading-tight">Продукты</h1>
-
-                    <div class="py-4 flex flex-col justify-items-stretch container-line-Order">
-                        <x-order-product-card key="0" :products="$products"></x-order-product-card>
+                    <h1 class="font-semibold text-xl text-gray-800 leading-tight">Товары</h1>
+                    <div class="container-line-ProductOrder">
+                        <x-order-product-form key="0" :products="$products"
+                                              :ingredients="$ingredients"></x-order-product-form>
                     </div>
-
                     <div
                         class="flex items-center gap-4"
                     >
@@ -46,8 +48,10 @@
     </div>
 </x-app-layout>
 <script src="{{asset('/js/OrderForm.js')}}"></script>
+<script src="{{asset('/js/ProductIngredientForm.js')}}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         new OrderForm();
+        new ProductIngredientForm();
     })
 </script>
