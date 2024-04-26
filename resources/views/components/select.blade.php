@@ -1,4 +1,4 @@
-@props(['disabled' => false, 'options' => '', 'selected' => 0])
+@props(['disabled' => false, 'options' => '', 'selected' => 0,  'additionalFields' => []])
 <?php
     if (!empty($attributes['data'])) {
         $defaultOptions = $attributes['data'];
@@ -17,6 +17,9 @@
             <option
                 value="{{$item->value}}"
                 @if((int)$selected === $item->value) selected @endif
+                @foreach($additionalFields as $field)
+                    data-{{$field}}="{{$item->$field}}"
+                @endforeach
             >
                 {{$item->label}}
             </option>

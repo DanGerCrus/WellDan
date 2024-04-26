@@ -11,7 +11,7 @@
 @endphp
 <div
     @php if(!empty($clone)) { echo 'id="line-clone-Ingredient"'; } @endphp
-    class="flex flex-row justify-between items-end py-4 line-Ingredient {{empty($clone) ? '' : 'hidden'}}"
+    class="flex flex-row justify-between items-center py-4 line-Ingredient {{empty($clone) ? '' : 'hidden'}}"
 >
     <div>
         <x-input-label
@@ -23,10 +23,11 @@
             name="{{$nameID}}"
             class="mt-1 block w-full"
             :data="$ingredients"
+            :additionalFields="['price']"
             :selected="!empty($ingredientID) ? $ingredientID : 0"
         />
     </div>
-
+    <span zclass="pt-4">x</span>
     <div>
         <x-input-label
             for="ingredient_count"
@@ -41,6 +42,8 @@
             :value="isset($ingredientCount) ? $ingredientCount : 1"
         />
     </div>
+    <span class="pt-4">=</span>
+    <span id="ingredient_price" class="pt-4">0</span><span class="pt-4">руб.</span>
 
     <div class="flex flex-row justify-end items-end">
         <x-green-button

@@ -34,7 +34,8 @@ class Product extends Model
         $result = collect([
             (object)[
                 'value' => '',
-                'label' => 'Не выбрано'
+                'label' => 'Не выбрано',
+                'price' => 0,
             ]
         ]);
 
@@ -42,7 +43,8 @@ class Product extends Model
             self::query()
                 ->select(
                     'id as value',
-                    'name as label'
+                    'name as label',
+                    'price'
                 )
                 ->orderBy('products.name')
                 ->get()

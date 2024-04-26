@@ -34,10 +34,13 @@
                     class="mt-1 block w-full"
                     :data="$products"
                     :selected="!empty($productID) ? $productID : 0"
+                    :additionalFields="['price']"
                     required
                     :disabled="!empty($blockAdd) ? 1 : 0"
                 />
             </div>
+            <span class="pl-5 pt-4">=</span>
+            <span id="product_price" class="pl-5 pt-4">0</span><span class="pl-5 pt-4">руб.</span>
         </div>
     </div>
 

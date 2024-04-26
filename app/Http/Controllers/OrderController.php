@@ -122,13 +122,15 @@ class OrderController extends Controller
                 'count' => $product['count'],
             ];
             $orderProductID = OrderHasProduct::query()->create($orderProductFields)->id;
+            $ingredients = [];
             foreach ($product['ingredients'] as $ingredient) {
-                if (!empty($ingredient['id']) && !empty($ingredient['count'])) {
+                if (!empty($ingredient['id']) && !empty($ingredient['count']) && !in_array($ingredient['id'], $ingredients)) {
                     $orderProductIngredientFields = [
                         'order_product_id' => $orderProductID,
                         'ingredient_id' => $ingredient['id'],
                         'count' => $ingredient['count'],
                     ];
+                    $ingredients[] = $ingredient['id'];
                     OrderProductIngredient::query()->create($orderProductIngredientFields);
                 }
             }
@@ -222,14 +224,16 @@ class OrderController extends Controller
                     'product_id' => $product['id'],
                     'count' => $product['count'],
                 ];
+                $ingredients = [];
                 $orderProductID = OrderHasProduct::query()->create($orderProductFields)->id;
                 foreach ($product['ingredients'] as $ingredient) {
-                    if (!empty($ingredient['id']) && !empty($ingredient['count'])) {
+                    if (!empty($ingredient['id']) && !empty($ingredient['count']) && !in_array($ingredient['id'], $ingredients)) {
                         $orderProductIngredientFields = [
                             'order_product_id' => $orderProductID,
                             'ingredient_id' => $ingredient['id'],
                             'count' => $ingredient['count'],
                         ];
+                        $ingredients[] = $ingredient['id'];
                         OrderProductIngredient::query()->create($orderProductIngredientFields);
                     }
                 }

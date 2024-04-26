@@ -44,10 +44,14 @@
                     </div>
                     <div class="text-gray-800">
                         <p class="font-bold">Состав:</p>
+                        @php $orderPrice = 0; @endphp
                         @foreach($order->products as $product)
+                            @php $productPrice = 0; $ingredientPrice = 0; @endphp
                             <span>
-                                {{$product->count}} x {{$product->product->name}} @if($product->ingredients->isNotEmpty()):@endif
+                                @php $productPrice = $product->product->price * $product->count; @endphp
+                                {{$product->count}} x {{$product->product->name}} = {{$productPrice}}руб.@if($product->ingredients->isNotEmpty()):@endif
                             </span>
+
                             @if($product->ingredients->isNotEmpty())
                                 @foreach($product->ingredients as $ingredient)
                                     <p class="ml-2">
@@ -55,11 +59,14 @@
                                         <label class="rounded px-1 bg-green-500 mr-0.5">
                                             {{ $ingredient->ingredient->name }}
                                         </label>
-                                        <span>;</span>
+                                        <span> = {{$ingredient->ingredient->price * $ingredient->count}}руб.;</span>
                                     </p>
+                                    @php $ingredientPrice += $ingredient->ingredient->price * $ingredient->count;@endphp
                                 @endforeach
                             @endif
+                            @php $orderPrice += $productPrice + ($ingredientPrice * $product->count); @endphp
                         @endforeach
+                        <span id="order_price" class="pt-5">Итого: {{$orderPrice}}</span><span class="pt-5"> руб.</span>
                     </div>
                     <div class="flex flex-row w-full justify-center items-center gap-2">
                         <x-primary-a :href="route('orders.edit', $order->id)">{{__('Редактировать')}}</x-primary-a>

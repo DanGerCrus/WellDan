@@ -71,7 +71,7 @@
                         <x-primary-button>
                             {{ __('Сохранить') }}
                         </x-primary-button>
-
+                        <span id="order_price" class="pl-5">0</span><span class="pl-5">руб.</span>
                         @if (session('status') === 'order-created')
                             <p
                                 x-data="{ show: true }"

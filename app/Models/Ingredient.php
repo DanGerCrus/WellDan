@@ -20,9 +20,10 @@ class Ingredient extends Model
         $result = collect([
             (object)[
                 'value' => '',
-                'label' => 'Не выбрано'
+                'label' => 'Не выбрано',
+                'price' => 0,
             ]
         ]);
-        return $result->merge(self::query()->select('id as value', 'name as label')->get());
+        return $result->merge(self::query()->select('id as value', 'name as label', 'price')->get());
     }
 }

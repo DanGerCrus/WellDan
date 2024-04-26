@@ -15,7 +15,28 @@ class OrderForm {
     {
         const addBtns = document.querySelectorAll(OrderForm.btnAddLineSelector);
         const removeBtns = document.querySelectorAll(OrderForm.btnRemoveLineSelector);
+        const containerLines = document.querySelectorAll('.' + OrderForm.lineOrderClass);
 
+        if (containerLines) {
+            containerLines.forEach((line) => {
+                const productID = line.querySelector('#product_id');
+                const productPrice = productID.selectedOptions[0].getAttribute('data-price')
+                const productPriceElement = line.querySelector('#product_price');
+                const productCount = line.querySelector('#product_count');
+                const ingredientID = line.querySelector('#ingredient_id');
+                const ingredientCount = line.querySelector('#ingredient_count');
+                const ingredientPrice = ingredientID.selectedOptions[0].getAttribute('data-price')
+                const ingredientPriceElement = line.querySelector('#ingredient_price');
+                ingredientID.addEventListener('change', (event) => OrderForm.refreshProductPrice(event));
+                ingredientCount.addEventListener('change', (event) => OrderForm.refreshProductPrice(event));
+                productID.addEventListener('change', (event) => OrderForm.refreshProductPrice(event));
+                productCount.addEventListener('change', (event) => OrderForm.refreshProductPrice(event));
+
+                ingredientPriceElement.innerHTML = +ingredientPrice * +ingredientCount.value;
+                productPriceElement.innerHTML = (+productPrice * +productCount.value) + (+productCount.value * +ingredientPriceElement.innerHTML);
+                OrderForm.refreshOrderPrice()
+            })
+        }
         if (addBtns) {
             addBtns.forEach((btn) => {
                 btn.addEventListener('click', (event) => OrderForm.addNewLine(event));
@@ -57,8 +78,12 @@ class OrderForm {
         const clone = document.querySelector(OrderForm.lineOrderCloneSelector).cloneNode(true);
         const productID = clone.querySelector('#product_id');
         const productCount = clone.querySelector('#product_count');
+        const productPrice = productID.selectedOptions[0].getAttribute('data-price')
+        const productPriceElement = clone.querySelector('#product_price');
         const ingredientID = clone.querySelector('#ingredient_id');
         const ingredientCount = clone.querySelector('#ingredient_count');
+        const ingredientPrice = ingredientID.selectedOptions[0].getAttribute('data-price')
+        const ingredientPriceElement = clone.querySelector('#ingredient_price');
         const addBtn = clone.querySelector(OrderForm.btnAddLineSelector);
         const removeBtn = clone.querySelector(OrderForm.btnRemoveLineSelector);
         clone.id = '';
@@ -70,7 +95,44 @@ class OrderForm {
         productCount.setAttribute('name', "products[" + OrderForm.keyLine + "][count]");
         ingredientID.setAttribute('name', "products[" + OrderForm.keyLine + "][ingredients][0][id]");
         ingredientCount.setAttribute('name', "products[" + OrderForm.keyLine + "][ingredients][0][count]");
+        ingredientID.addEventListener('change', (event) => OrderForm.refreshProductPrice(event));
+        ingredientCount.addEventListener('change', (event) => OrderForm.refreshProductPrice(event));
+        productID.addEventListener('change', (event) => OrderForm.refreshProductPrice(event));
+        productCount.addEventListener('change', (event) => OrderForm.refreshProductPrice(event));
+
+        ingredientPriceElement.innerHTML = +ingredientPrice * +ingredientCount.value;
+        productPriceElement.innerHTML = (+productPrice * +productCount.value) + (+productCount.value * +ingredientPriceElement.innerHTML);
+        OrderForm.refreshOrderPrice()
 
         return clone;
+    }
+
+    static refreshProductPrice(event)
+    {
+        const line = OrderForm.getLineOrder(event.target)
+        const productID = line.querySelector('#product_id');
+        const productCount = line.querySelector('#product_count');
+        const productPrice = productID.selectedOptions[0].getAttribute('data-price')
+        const productPriceElement = line.querySelector('#product_price');
+        const ingredientID = line.querySelector('#ingredient_id');
+        const ingredientCount = line.querySelector('#ingredient_count');
+        const ingredientPrice = ingredientID.selectedOptions[0].getAttribute('data-price')
+        const ingredientPriceElement = line.querySelector('#ingredient_price');
+
+        ingredientPriceElement.innerHTML = +ingredientPrice * +ingredientCount.value;
+        productPriceElement.innerHTML = (+productPrice * +productCount.value) + (+productCount.value * +ingredientPriceElement.innerHTML);
+        OrderForm.refreshOrderPrice()
+    }
+
+    static refreshOrderPrice()
+    {
+        const orderPriceElement = document.querySelector('#order_price')
+        let orderPrice = 0
+        const containerLines = document.querySelectorAll('.' + OrderForm.lineOrderClass);
+        containerLines.forEach((line) => {
+            const productPrice = line.querySelector('#product_price')
+            orderPrice += +productPrice.innerHTML
+        })
+        orderPriceElement.innerHTML = orderPrice
     }
 }
