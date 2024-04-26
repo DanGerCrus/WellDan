@@ -21,7 +21,7 @@
             <h1
                 class="text-xl font-bold text-gray-800 uppercase"
             >
-                {{$ingredient->name}}
+                {{$ingredient->name}} за {{$ingredient->price}}руб.
             </h1>
         </a>
     </div>

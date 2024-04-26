@@ -25,6 +25,8 @@ class UserSeeder extends Seeder
             'ingredient-list',
             'ingredient-edit',
             'ingredient-delete',
+            'order-list',
+            'order-create',
             'order-edit',
             'role-list',
             'role-create',
@@ -51,7 +53,7 @@ class UserSeeder extends Seeder
         $rolePermissions = Permission::pluck('id','id')->all();
         $role->syncPermissions($rolePermissions);
         $user->assignRole([$role->id]);
-        User::create([
+        $user = User::create([
             'first_name' => 'user',
             'last_name' => 'user',
             'father_name' => 'user',
@@ -60,5 +62,9 @@ class UserSeeder extends Seeder
             'email' => 'user@mail.com',
             'password' => Hash::make('qweqwe123')
         ]);
+        $role = Role::create(['name' => 'user']);
+        $rolePermissions = Permission::whereIn('name', ['order-create'])->pluck('id','id');
+        $role->syncPermissions($rolePermissions);
+        $user->assignRole([$role->id]);
     }
 }

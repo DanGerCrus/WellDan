@@ -24,6 +24,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ProductsController::class, 'index'])->name('welcome');
 Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
+Route::get('/products/{id}', [ProductsController::class, 'show'])
+    ->whereNumber('id')
+    ->name('products.show');
 
 Route::get('{upload}', [FilesController::class, 'get'])->where('upload', '(upload\/)(.*)');
 
@@ -34,12 +37,6 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
-
-    Route::middleware('permission:product-list')->group(function () {
-        Route::get('/products/{id}', [ProductsController::class, 'show'])
-            ->whereNumber('id')
-            ->name('products.show');
-    });
 
     Route::middleware('permission:product-edit')->group(function () {
         Route::get('/products/create', [ProductsController::class, 'create'])->name('products.create');
@@ -63,7 +60,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('categories', ProductsCategoriesController::class);
     Route::resource('ingredients', IngredientsController::class);
-    Route::middleware('permission:order-edit')->resource('orders', OrderController::class);
+    Route::resource('orders', OrderController::class);
 });
 
 require __DIR__.'/auth.php';

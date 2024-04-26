@@ -36,7 +36,9 @@
                     </div>
 
                     <div class="flex flex-row w-full justify-center items-center gap-2">
-                        <x-in-basket :id="$product->id" :route="route('products.show', $product->id)"></x-in-basket>
+                        @auth
+                            <x-in-basket :id="$product->id" :route="route('products.show', $product->id)"></x-in-basket>
+                        @endauth
                         @if (session('status') === 'basket-created')
                             <p
                                 x-data="{ show: true }"

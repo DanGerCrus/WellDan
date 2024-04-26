@@ -75,12 +75,14 @@ class IngredientsController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'kkal' => ['required', 'numeric']
+            'kkal' => ['required', 'numeric'],
+            'price' => ['required', 'integer'],
         ]);
 
         $fields = [
             'name' => $request->post('name'),
             'kkal' => $request->post('kkal'),
+            'price' => $request->post('price'),
         ];
 
         Ingredient::query()->create($fields);
@@ -119,12 +121,14 @@ class IngredientsController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'kkal' => ['required', 'numeric']
+            'kkal' => ['required', 'numeric'],
+            'price' => ['required', 'integer'],
         ]);
 
         $fields = [
             'name' => $request->post('name'),
             'kkal' => $request->post('kkal'),
+            'price' => $request->post('price'),
         ];
 
         Ingredient::find($id)->update($fields);

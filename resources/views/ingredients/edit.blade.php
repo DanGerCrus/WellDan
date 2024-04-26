@@ -61,6 +61,27 @@
                     </div>
 
                     <div
+                        class="py-4"
+                    >
+                        <x-input-label
+                            for="price"
+                            :value="__('Стоимость')"
+                        />
+                        <x-text-input
+                            id="price"
+                            name="price"
+                            type="text"
+                            value="{{$ingredient->price}}"
+                            class="mt-1 block w-full"
+                            required
+                        />
+                        <x-input-error
+                            class="mt-2"
+                            :messages="$errors->get('price')"
+                        />
+                    </div>
+
+                    <div
                         class="flex items-center gap-4"
                     >
                         <x-primary-button>

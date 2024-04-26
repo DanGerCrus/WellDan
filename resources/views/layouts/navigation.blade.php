@@ -27,7 +27,7 @@
                             {{ __('Ингредиенты') }}
                         </x-nav-link>
                     @endcan
-                    @can('order-edit')
+                    @can('order-list')
                         <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
                             {{ __('Заказы') }}
                         </x-nav-link>

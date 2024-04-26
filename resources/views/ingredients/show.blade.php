@@ -8,6 +8,7 @@
                 <div class="flex flex-col justify-center items-start gap-2">
                     <x-item-p label="Название: " value="{{$ingredient->name}}"></x-item-p>
                     <x-item-p label="Калории: " value="{{$ingredient->kkal}}"></x-item-p>
+                    <x-item-p label="Стоимость: " value="{{$ingredient->price}}"></x-item-p>
                     <div class="flex flex-row w-full justify-center items-center gap-2">
                         @can('ingredient-edit')
                         <x-primary-a :href="route('ingredients.edit', $ingredient->id)">{{__('Редактировать')}}</x-primary-a>
