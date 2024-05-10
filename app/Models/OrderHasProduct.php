@@ -17,17 +17,17 @@ class OrderHasProduct extends Model
 
     public function order(): BelongsTo
     {
-        return $this->belongsTo(Order::class, 'order_id', 'id');
+        return $this->belongsTo(Order::class, 'order_id', 'id')->withTrashed();
     }
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class, 'product_id', 'id');
+        return $this->belongsTo(Product::class, 'product_id', 'id')->withTrashed();
     }
 
     public function ingredients(): HasMany
     {
-        return $this->hasMany(OrderProductIngredient::class, 'order_product_id', 'id');
+        return $this->hasMany(OrderProductIngredient::class, 'order_product_id', 'id')->withTrashed();
     }
 }
 

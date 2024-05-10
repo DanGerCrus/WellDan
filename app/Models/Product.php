@@ -21,12 +21,12 @@ class Product extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(ProductCategory::class, 'category_id', 'id');
+        return $this->belongsTo(ProductCategory::class, 'category_id', 'id')->withTrashed();
     }
 
     public function ingredients(): HasMany
     {
-        return $this->hasMany(ProductIngredient::class, 'product_id', 'id');
+        return $this->hasMany(ProductIngredient::class, 'product_id', 'id')->withTrashed();
     }
 
     public static function autocomplete(): Collection
