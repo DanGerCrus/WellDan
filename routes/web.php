@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [ProductsController::class, 'index'])->name('welcome');
+Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
 Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductsController::class, 'show'])
     ->whereNumber('id')
@@ -61,6 +62,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', ProductsCategoriesController::class);
     Route::resource('ingredients', IngredientsController::class);
     Route::resource('orders', OrderController::class);
+    Route::post('/orders/{id}/repeat', [OrderController::class, 'repeat'])->whereNumber('id')->name('orders.repeat');
+    Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel'])->whereNumber('id')->name('orders.cancel');
 });
 
 require __DIR__.'/auth.php';

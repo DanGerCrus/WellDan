@@ -3,8 +3,25 @@
         @include('orders.partials.header')
     </x-slot>
     <div class="py-12">
-
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            @if (session('status') === 'order-repeat')
+                <p
+                    x-data="{ show: true }"
+                    x-show="show"
+                    x-transition
+                    x-init="setTimeout(() => show = false, 5000)"
+                    class="text-sm text-gray-600"
+                >{{ __('Заказ успешно повторен.') }}</p>
+            @endif
+            @if (session('status') === 'order-cancel')
+                <p
+                    x-data="{ show: true }"
+                    x-show="show"
+                    x-transition
+                    x-init="setTimeout(() => show = false, 5000)"
+                    class="text-sm text-gray-600"
+                >{{ __('Заказ успешно отменен.') }}</p>
+            @endif
             <div class="max-w-lg flex flex-col justify-center items-center py-4 lg:max-w-none lg:p-6 bg-white shadow sm:rounded-lg">
                 <div class="flex flex-col justify-center items-start gap-2">
                     <x-item-p label="Номер" value="{{$order->id}}"></x-item-p>
@@ -69,14 +86,29 @@
                         <span id="order_price" class="pt-5">Итого: {{$orderPrice}}</span><span class="pt-5"> руб.</span>
                     </div>
                     <div class="flex flex-row w-full justify-center items-center gap-2">
-                        <x-primary-a :href="route('orders.edit', $order->id)">{{__('Редактировать')}}</x-primary-a>
-                        <x-danger-button
-                            type="button"
-                            x-data=""
-                            x-on:click.prevent="$dispatch('open-modal', 'confirm-order-deletion')"
-                        >
-                            {{__('Удалить')}}
-                        </x-danger-button>
+                        <form method="post" action="{{ route('orders.repeat', $order->id) }}">
+                            @csrf
+                            <x-secondary-button type="submit">
+                                {{ __('Повторить') }}
+                            </x-secondary-button>
+                        </form>
+                        @can('order-edit')
+                            <x-primary-a :href="route('orders.edit', $order->id)">{{__('Редактировать')}}</x-primary-a>
+                            <x-danger-button
+                                type="button"
+                                x-data=""
+                                x-on:click.prevent="$dispatch('open-modal', 'confirm-order-deletion')"
+                            >
+                                {{__('Удалить')}}
+                            </x-danger-button>
+                        @else
+                            <form method="post" action="{{ route('orders.cancel', $order->id) }}">
+                                @csrf
+                                <x-danger-button type="submit">
+                                    {{ __('Отменить') }}
+                                </x-danger-button>
+                            </form>
+                        @endcan
                     </div>
                 </div>
             </div>

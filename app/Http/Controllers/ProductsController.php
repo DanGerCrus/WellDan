@@ -12,7 +12,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -64,8 +63,8 @@ class ProductsController extends Controller
 
         return [
             'products' => $products->paginate(6),
-            'order' => self::orderGenerate($request),
-            'filter' => self::filterGenerate($request),
+            'products_order' => self::orderGenerate($request),
+            'products_filter' => self::filterGenerate($request),
             'category_select' => ProductCategory::autocomplete()
         ];
     }

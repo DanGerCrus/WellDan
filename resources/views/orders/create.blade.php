@@ -10,10 +10,10 @@
         <div
             class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6"
         >
-            <x-order-product-form key="0" clone="1" :products="$products"
-                                  :ingredients="$ingredients"></x-order-product-form>
+            <x-order-product-form key="0" clone="1" :products="$products_select"
+                                  :ingredients="$ingredients_select"></x-order-product-form>
             <x-product-ingredient-card productKey="0" key="0" clone="1"
-                                       :ingredients="$ingredients"></x-product-ingredient-card>
+                                       :ingredients="$ingredients_select"></x-product-ingredient-card>
             <section
                 class="max-w-4xl p-6 mx-auto bg-white rounded-md shadow-md"
             >
@@ -22,8 +22,8 @@
 
                     <h1 class="font-semibold text-xl text-gray-800 leading-tight">Товары</h1>
                     <div class="container-line-ProductOrder">
-                        <x-order-product-form key="0" :products="$products"
-                                              :ingredients="$ingredients"></x-order-product-form>
+                        <x-order-product-form key="0" :products="$products_select"
+                                              :ingredients="$ingredients_select"></x-order-product-form>
                     </div>
                     <div
                         class="flex items-center gap-4"

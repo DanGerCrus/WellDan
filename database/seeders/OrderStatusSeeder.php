@@ -18,7 +18,8 @@ class OrderStatusSeeder extends Seeder
             'Заказ готовится',
             'Заказ готов',
             'Заказ в пути',
-            'Заказ получен'
+            'Заказ получен',
+            'Заказ отменен',
         ];
 
         foreach ($statuses as $status){

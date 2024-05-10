@@ -126,7 +126,7 @@ class OrderForm {
 
     static refreshOrderPrice()
     {
-        const orderPriceElement = document.querySelector('#order_price')
+        const orderPriceElement = document.querySelector('span#order_price')
         let orderPrice = 0
         const containerLines = document.querySelectorAll('.' + OrderForm.lineOrderClass);
         containerLines.forEach((line) => {

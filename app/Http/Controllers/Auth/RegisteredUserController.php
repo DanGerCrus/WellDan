@@ -57,8 +57,8 @@ class RegisteredUserController extends Controller
 
         if (empty($userRole)) {
             $userRole = Role::create(['name' => 'user']);
-            $productList = Permission::where('name', '=', 'product-list')->pluck('id', 'id')->first();
-            $userRole->syncPermissions($productList);
+            $permissions = Permission::whereIn('name', ['order-create'])->pluck('id','id');
+            $userRole->syncPermissions($permissions);
         }
 
         $user->assignRole([$userRole->id]);

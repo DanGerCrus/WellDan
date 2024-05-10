@@ -52,14 +52,11 @@ class OrderController extends Controller
     public function __construct()
     {
         $this->middleware('permission:order-list', ['only' => ['index']]);
-        $this->middleware('permission:order-create', ['only' => ['store']]);
-        $this->middleware('permission:order-edit', ['only' => ['create', 'edit', 'update', 'destroy']]);
+        $this->middleware('permission:order-create', ['only' => ['create']]);
+        $this->middleware('permission:order-edit', ['only' => ['edit', 'update', 'destroy']]);
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request): Response
+    public function datatable(Request $request, bool $currentUser = false): array
     {
         self::setDefaultOrder(['date_order' => 'desc']);
         $orders = Order::with(
@@ -69,16 +66,28 @@ class OrderController extends Controller
             'products.ingredients.ingredient',
             'products.product'
         );
+        if ($currentUser) {
+            $orders = $orders->where('client_id', '=', Auth::id())
+                ->orWhere('creator_id', '=', Auth::id());
+        }
         $orders = self::filterData($request, $orders);
         $orders = self::orderData($request, $orders);
         $orders = $orders->paginate(15);
 
-        return response()->view('orders.index', [
+        return [
             'orders' => $orders,
             'users_select' => User::autocomplete(),
-            'filter' => self::filterGenerate($request),
-            'order' => self::orderGenerate($request)
-        ]);
+            'orders_filter' => self::filterGenerate($request),
+            'orders_order' => self::orderGenerate($request)
+        ];
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request): Response
+    {
+        return response()->view('orders.index', $this->datatable($request));
     }
 
     /**
@@ -87,8 +96,8 @@ class OrderController extends Controller
     public function create(Request $request): Response
     {
         return response()->view('orders.create', [
-            'products' => Product::autocomplete(),
-            'ingredients' => Ingredient::getForSelect(),
+            'products_select' => Product::autocomplete(),
+            'ingredients_select' => Ingredient::getForSelect(),
         ]);
     }
 
@@ -241,6 +250,55 @@ class OrderController extends Controller
         }
 
         return Redirect::route('orders.edit', $id)->with('status', 'order-updated');
+    }
+
+    public function repeat(int $id): RedirectResponse
+    {
+        $order = Order::with(
+            'status',
+            'creator',
+            'client',
+            'products.ingredients.ingredient',
+            'products.product'
+        )
+            ->find($id);
+
+        $repeatID = Order::query()->create([
+            'status_id' => 1,
+            'creator_id' => Auth::user()->id,
+            'client_id' => $order->client_id,
+            'date_order' => Carbon::now()->toDateTime(),
+        ])->id;
+
+        if (!empty($order->products) && $order->products->isNotEmpty()) {
+            foreach ($order->products as $product) {
+                $orderProductID = OrderHasProduct::query()->create([
+                    'order_id' => $repeatID,
+                    'product_id' => $product->product_id,
+                    'count' => $product->count,
+                ])->id;
+                if (!empty($product->ingredients) && $product->ingredients->isNotEmpty()) {
+                    foreach ($product->ingredients as $ingredient) {
+                        OrderProductIngredient::query()->create([
+                            'order_product_id' => $orderProductID,
+                            'ingredient_id' => $ingredient->ingredient_id,
+                            'count' => $ingredient->count,
+                        ]);
+                    }
+                }
+            }
+        }
+
+        return Redirect::route('orders.show', $repeatID)->with('status', 'order-repeat');
+    }
+
+    public function cancel(int $id): RedirectResponse
+    {
+        Order::query()->find($id)->update([
+            'status_id' => 7
+        ]);
+
+        return Redirect::route('orders.show', $id)->with('status', 'order-cancel');
     }
 
     /**
