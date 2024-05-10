@@ -6,7 +6,6 @@ use App\Models\Ingredient;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 
 class WelcomeController extends Controller
 {
