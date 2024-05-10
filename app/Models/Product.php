@@ -26,7 +26,7 @@ class Product extends Model
 
     public function ingredients(): HasMany
     {
-        return $this->hasMany(ProductIngredient::class, 'product_id', 'id')->withTrashed();
+        return $this->hasMany(ProductIngredient::class, 'product_id', 'id');
     }
 
     public static function autocomplete(): Collection

@@ -14,6 +14,6 @@ class OrderProductIngredient extends Model
 
     public function ingredient(): BelongsTo
     {
-        return $this->belongsTo(Ingredient::class, 'ingredient_id', 'id');
+        return $this->belongsTo(Ingredient::class, 'ingredient_id', 'id')->withTrashed();
     }
 }

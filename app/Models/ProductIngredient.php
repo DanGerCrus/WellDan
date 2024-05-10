@@ -14,11 +14,11 @@ class ProductIngredient extends Model
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class, 'product_id', 'id');
+        return $this->belongsTo(Product::class, 'product_id', 'id')->withTrashed();
     }
 
     public function ingredient(): BelongsTo
     {
-        return $this->belongsTo(Ingredient::class, 'ingredient_id', 'id');
+        return $this->belongsTo(Ingredient::class, 'ingredient_id', 'id')->withTrashed();
     }
 }

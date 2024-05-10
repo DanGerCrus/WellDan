@@ -27,7 +27,7 @@ class OrderHasProduct extends Model
 
     public function ingredients(): HasMany
     {
-        return $this->hasMany(OrderProductIngredient::class, 'order_product_id', 'id')->withTrashed();
+        return $this->hasMany(OrderProductIngredient::class, 'order_product_id', 'id');
     }
 }
 
