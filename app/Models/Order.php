@@ -33,6 +33,6 @@ class Order extends Model
 
     public function products(): HasMany
     {
-        return $this->hasMany(OrderHasProduct::class, 'order_id', 'id')->withTrashed();
+        return $this->hasMany(OrderHasProduct::class, 'order_id', 'id');
     }
 }
