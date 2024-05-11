@@ -45,6 +45,7 @@
                         <form method="post" action="{{ route('orders.store') }}">
                             @csrf
                             <input type="hidden" name="client_id" value="{{Auth::id()}}">
+                            <input type="hidden" name="welcome" value="1">
                             <h1 class="font-semibold text-xl text-gray-800 leading-tight">Товары</h1>
                             <div class="container-line-ProductOrder">
                                 <x-order-product-form key="0" :products="$products_select"

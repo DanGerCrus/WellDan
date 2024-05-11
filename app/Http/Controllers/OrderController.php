@@ -150,7 +150,12 @@ class OrderController extends Controller
             return Redirect::route('basket.index')->with('status', 'order-created');
         }
 
-        return Redirect::route('orders.create')->with('status', 'order-created');
+        $route = 'orders.create';
+        if ($request->has('welcome')) {
+            $route = 'welcome';
+        }
+
+        return Redirect::route($route)->with('status', 'order-created');
     }
 
     /**
