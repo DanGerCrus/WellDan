@@ -10,6 +10,16 @@
         <div
             class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6"
         >
+            @if (count($errors) > 0)
+                <div class="w-full px-10 py-5 bg-red-700">
+                    <strong>Whoops!</strong> Возникли проблемы с вашими данными.
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <x-order-product-form key="0" clone="1" :products="$products_select"
                                   :ingredients="$ingredients_select"></x-order-product-form>
             <x-product-ingredient-card productKey="0" key="0" clone="1"

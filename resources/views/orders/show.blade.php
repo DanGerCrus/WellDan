@@ -86,12 +86,14 @@
                         <span id="order_price" class="pt-5">Итого: {{$orderPrice}}</span><span class="pt-5"> руб.</span>
                     </div>
                     <div class="flex flex-row w-full justify-center items-center gap-2">
+                        @can('order-create')
                         <form method="post" action="{{ route('orders.repeat', $order->id) }}">
                             @csrf
                             <x-secondary-button type="submit">
                                 {{ __('Повторить') }}
                             </x-secondary-button>
                         </form>
+                        @endcan
                         @can('order-edit')
                             <x-primary-a :href="route('orders.edit', $order->id)">{{__('Редактировать')}}</x-primary-a>
                             <x-danger-button

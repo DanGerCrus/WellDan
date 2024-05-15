@@ -51,8 +51,9 @@ class OrderController extends Controller
 
     public function __construct()
     {
+        $this->middleware('permission:order-list|order-create|order-edit', ['show']);
         $this->middleware('permission:order-list', ['only' => ['index']]);
-        $this->middleware('permission:order-create', ['only' => ['create']]);
+        $this->middleware('permission:order-create', ['only' => ['create', 'store', 'repeat', 'cancel']]);
         $this->middleware('permission:order-edit', ['only' => ['edit', 'update', 'destroy']]);
     }
 
@@ -206,7 +207,7 @@ class OrderController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $request->validate([
-            'status_id' => ['integer', Rule::exists(OrderStatus::class, 'id')],
+            'status_id' => ['required', 'integer', Rule::exists(OrderStatus::class, 'id')],
             'products' => ['required', 'array'],
             'products.*' => ['required', 'array'],
             'products.*.id' => ['required', 'integer', Rule::exists(Product::class, 'id')],
