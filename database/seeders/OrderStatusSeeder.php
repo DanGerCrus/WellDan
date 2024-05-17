@@ -27,7 +27,7 @@ class OrderStatusSeeder extends Seeder
             ],
             [
                 'name' => 'Заказ готов',
-                'next_status_id' => '5,7',
+                'next_status_id' => '5',
             ],
             [
                 'name' => 'Заказ в пути',
