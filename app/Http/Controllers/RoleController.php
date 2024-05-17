@@ -99,7 +99,7 @@ class RoleController extends Controller
      */
     public function show(int $id): Response
     {
-        $role = Role::find($id);
+        $role = Role::findOrFail($id);
         $rolePermissions = Permission::join(
             "role_has_permissions",
             "role_has_permissions.permission_id",
@@ -120,7 +120,7 @@ class RoleController extends Controller
      */
     public function edit(int $id): Response
     {
-        $role = Role::find($id);
+        $role = Role::findOrFail($id);
         $permission = Permission::get();
         $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id", $id)
             ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
@@ -143,7 +143,7 @@ class RoleController extends Controller
             'name' => 'required',
             'permission' => 'required',
         ]);
-        $role = Role::find($id);
+        $role = Role::findOrFail($id);
         $role->name = $request->input('name');
         $role->save();
         $role->syncPermissions($request->input('permission'));
@@ -160,7 +160,7 @@ class RoleController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
-        Role::find($id)->delete();
+        Role::findOrFail($id)->delete();
         return redirect()->route('roles.index')
             ->with('success', 'Роль удалена успешна');
     }

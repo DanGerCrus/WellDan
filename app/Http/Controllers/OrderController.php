@@ -179,7 +179,7 @@ class OrderController extends Controller
             'products.ingredients.ingredient',
             'products.product'
         )
-            ->find($id);
+            ->findOrFail($id);
         $history = OrderHistory::query()
             ->select(
                 'id',
@@ -207,7 +207,7 @@ class OrderController extends Controller
             'client',
             'products.ingredients'
         )
-            ->find($id);
+            ->findOrFail($id);
         $orderStatuses = OrderStatus::select('id', 'name')
             ->get();
         $nextStatuses = explode(',', $order->status->next_status_id);
@@ -248,7 +248,7 @@ class OrderController extends Controller
         $fields = [
             'status_id' => $request->post('status_id'),
         ];
-        $order = Order::find($id);
+        $order = Order::findOrFail($id);
         $order->update($fields);
         $orderHistory = OrderHistory::query()->where('order_id', $id)->orderBy('id', 'desc')->first();
         if ($order->status_id !== $orderHistory->status_id) {
@@ -307,7 +307,7 @@ class OrderController extends Controller
             'products.ingredients.ingredient',
             'products.product'
         )
-            ->find($id);
+            ->findOrFail($id);
 
         $repeatID = Order::query()->create([
             'status_id' => 1,
@@ -340,7 +340,7 @@ class OrderController extends Controller
 
     public function cancel(int $id): RedirectResponse
     {
-        Order::query()->find($id)->update([
+        Order::query()->findOrFail($id)->update([
             'status_id' => 7
         ]);
 
@@ -352,7 +352,7 @@ class OrderController extends Controller
      */
     public function destroy(string $id): RedirectResponse
     {
-        Order::find($id)->delete();
+        Order::findOrFail($id)->delete();
 
         return redirect()->route('orders.index');
     }

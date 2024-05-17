@@ -151,7 +151,7 @@ class ProductsController extends Controller
      */
     public function show(int $id): Response
     {
-        $product = Product::with('category', 'ingredients.ingredient')->find($id);
+        $product = Product::with('category', 'ingredients.ingredient')->findOrFail($id);
 
         return response()->view('products.show', [
             'product' => $product
@@ -165,7 +165,7 @@ class ProductsController extends Controller
     {
         $categories = ProductCategory::select('id as value', 'name as label')->get();
         $ingredients = Ingredient::getForSelect();
-        $product = Product::with('category', 'ingredients')->find($id);
+        $product = Product::with('category', 'ingredients')->findOrFail($id);
 
         return response()->view('products.edit', [
             'product' => $product,
@@ -230,7 +230,7 @@ class ProductsController extends Controller
      */
     public function destroy(string $id): RedirectResponse
     {
-        Product::find($id)->delete();
+        Product::findOrFail($id)->delete();
 
         return redirect()->route('products.index');
     }

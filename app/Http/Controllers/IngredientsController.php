@@ -95,7 +95,7 @@ class IngredientsController extends Controller
      */
     public function show(int $id): Response
     {
-        $ingredient = Ingredient::find($id);
+        $ingredient = Ingredient::findOrFail($id);
 
         return response()->view('ingredients.show', [
             'ingredient' => $ingredient,
@@ -107,7 +107,7 @@ class IngredientsController extends Controller
      */
     public function edit(int $id): Response
     {
-        $ingredient = Ingredient::find($id);
+        $ingredient = Ingredient::findOrFail($id);
 
         return response()->view('ingredients.edit', [
             'ingredient' => $ingredient,
@@ -131,7 +131,7 @@ class IngredientsController extends Controller
             'price' => $request->post('price'),
         ];
 
-        Ingredient::find($id)->update($fields);
+        Ingredient::findOrFail($id)->update($fields);
 
         return Redirect::route('ingredients.edit', $id)->with('status', 'ingredient-updated');
     }
@@ -141,7 +141,7 @@ class IngredientsController extends Controller
      */
     public function destroy(string $id): RedirectResponse
     {
-        Ingredient::find($id)->delete();
+        Ingredient::findOrFail($id)->delete();
 
         return redirect()->route('ingredients.index');
     }

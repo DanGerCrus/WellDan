@@ -84,7 +84,7 @@ class ProductsCategoriesController extends Controller
      */
     public function show(int $id): Response
     {
-        $category = ProductCategory::find($id);
+        $category = ProductCategory::findOrFail($id);
 
         return response()->view('products_categories.show', [
             'category' => $category
@@ -96,7 +96,7 @@ class ProductsCategoriesController extends Controller
      */
     public function edit(int $id): Response
     {
-        $category = ProductCategory::find($id);
+        $category = ProductCategory::findOrFail($id);
 
         return response()->view('products_categories.edit', [
             'category' => $category
@@ -116,7 +116,7 @@ class ProductsCategoriesController extends Controller
             'name' => $request->post('name'),
         ];
 
-        ProductCategory::find($id)->update($fields);
+        ProductCategory::findOrFail($id)->update($fields);
 
         return Redirect::route('categories.edit', $id)->with('status', 'products_category-updated');
     }
@@ -127,7 +127,7 @@ class ProductsCategoriesController extends Controller
     public function destroy(string $id): RedirectResponse
     {
         Product::where('category_id', '=', $id)->delete();
-        ProductCategory::find($id)->delete();
+        ProductCategory::findOrFail($id)->delete();
 
         return redirect()->route('categories.index');
     }

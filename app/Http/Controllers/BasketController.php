@@ -18,7 +18,7 @@ class BasketController extends Controller
 {
     public function index(Request $request): Response
     {
-        $user = User::query()->with('basket.product', 'basket.ingredients')->find(Auth::id());
+        $user = User::query()->with('basket.product', 'basket.ingredients')->findOrFail(Auth::id());
 
         return response()->view('basket.index', [
             'basket' => $user->basket,

@@ -113,7 +113,7 @@ class UserController extends Controller
      */
     public function show(int $id): Response
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         return response()->view('users.show', compact('user'));
     }
 
@@ -126,7 +126,7 @@ class UserController extends Controller
      */
     public function edit(int $id): Response
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         $roles = Role::pluck('name', 'name')->all();
         $userRole = $user->roles->pluck('name', 'name')->all();
         return response()->view('users.edit', compact('user', 'roles', 'userRole'));
@@ -161,7 +161,7 @@ class UserController extends Controller
         } else {
             $input = Arr::except($input, array('password'));
         }
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         $user->update($input);
         DB::table('model_has_roles')->where('model_id', $id)->delete();
         $user->assignRole($request->input('roles'));
@@ -178,7 +178,7 @@ class UserController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
-        User::find($id)->delete();
+        User::findOrFail($id)->delete();
         return redirect()->route('users.index')
             ->with('success', 'Пользователь удален успешно');
     }
