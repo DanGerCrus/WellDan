@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('orders_statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name',25);
-            $table->timestamps();
-            $table->softDeletes();
+            $table->string('next_status_id')->comment('через запятую ид');
         });
     }
 

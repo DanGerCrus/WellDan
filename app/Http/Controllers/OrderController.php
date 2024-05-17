@@ -208,8 +208,18 @@ class OrderController extends Controller
             'products.ingredients'
         )
             ->find($id);
-        $statuses = OrderStatus::select('id as value', 'name as label')
+        $orderStatuses = OrderStatus::select('id', 'name')
             ->get();
+        $nextStatuses = explode(',', $order->status->next_status_id);
+        $statuses = collect([]);
+        foreach ($orderStatuses as $status) {
+            if ($status->id === $order->status->id || in_array((string)$status->id, $nextStatuses)) {
+                $statuses->push((object)[
+                    'value' => $status->id,
+                    'label' => $status->name,
+                ]);
+            }
+        }
 
         return response()->view('orders.edit', [
             'order' => $order,
