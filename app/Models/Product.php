@@ -36,6 +36,8 @@ class Product extends Model
                 'value' => '',
                 'label' => 'Не выбрано',
                 'price' => 0,
+                'kkal' => 0,
+                'no_ingredients' => 0,
             ]
         ]);
 
@@ -44,7 +46,9 @@ class Product extends Model
                 ->select(
                     'id as value',
                     'name as label',
-                    'price'
+                    'price',
+                    'kkal',
+                    'no_ingredients',
                 )
                 ->orderBy('products.name')
                 ->get()

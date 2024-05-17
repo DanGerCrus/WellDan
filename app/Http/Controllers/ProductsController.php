@@ -23,6 +23,7 @@ class ProductsController extends Controller
 
     public static array $orderFields = [
         'name',
+        'kkal',
         'category_id',
         'price'
     ];
@@ -41,6 +42,14 @@ class ProductsController extends Controller
             'action' => '<='
         ],
         'min_price' => [
+            'type' => '1',
+            'action' => '>='
+        ],
+        'max_kkal' => [
+            'type' => '',
+            'action' => '<='
+        ],
+        'min_kkal' => [
             'type' => '1',
             'action' => '>='
         ],
@@ -101,31 +110,37 @@ class ProductsController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'price' => ['required', 'integer'],
+            'kkal' => ['required', 'decimal:0,2'],
+            'no_ingredients' => ['boolean',],
             'photo' => ['required', 'image'],
             'category_id' => ['required', 'integer', 'min:1', Rule::exists(ProductCategory::class, 'id')],
-            'ingredients' => ['required', 'array'],
-            'ingredients.*' => ['required', 'array'],
-            'ingredients.*.id' => ['required', 'integer', Rule::exists(Ingredient::class, 'id')],
-            'ingredients.*.count' => ['required', 'integer', 'min:1'],
+            'ingredients' => ['array'],
+            'ingredients.*' => ['array'],
+            'ingredients.*.id' => ['integer', Rule::exists(Ingredient::class, 'id')],
+            'ingredients.*.count' => ['integer', 'min:1'],
         ]);
 
         $fields = [
             'name' => $request->post('name'),
             'description' => $request->post('description'),
             'price' => $request->post('price'),
+            'kkal' => $request->post('kkal'),
+            'no_ingredients' => $request->post('no_ingredients', 0),
             'category_id' => $request->post('category_id'),
         ];
 
         $id = Product::query()->updateOrCreate(['id' => 0], $fields)->id;
         $this->savePhoto($id, $request->file('photo'));
 
-        foreach ($request->post('ingredients') as $ingredient) {
-            $productIngredientFields = [
-                'product_id' => $id,
-                'ingredient_id' => $ingredient['id'],
-                'count' => $ingredient['count'],
-            ];
-            ProductIngredient::query()->create($productIngredientFields);
+        if ($request->filled('ingredients')) {
+            foreach ($request->post('ingredients') as $ingredient) {
+                $productIngredientFields = [
+                    'product_id' => $id,
+                    'ingredient_id' => $ingredient['id'],
+                    'count' => $ingredient['count'],
+                ];
+                ProductIngredient::query()->create($productIngredientFields);
+            }
         }
 
         return Redirect::route('products.create')->with('status', 'product-created');
@@ -170,18 +185,22 @@ class ProductsController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'price' => ['required', 'integer'],
+            'kkal' => ['required', 'decimal:0,2'],
+            'no_ingredients' => ['boolean',],
             'photo' => ['image', 'nullable'],
             'category_id' => ['required', 'integer', 'min:1', Rule::exists(ProductCategory::class, 'id')],
-            'ingredients' => ['required', 'array'],
-            'ingredients.*' => ['required', 'array'],
-            'ingredients.*.id' => ['required', 'integer', Rule::exists(Ingredient::class, 'id')],
-            'ingredients.*.count' => ['required', 'integer', 'min:1'],
+            'ingredients' => ['array'],
+            'ingredients.*' => ['array'],
+            'ingredients.*.id' => ['integer', Rule::exists(Ingredient::class, 'id')],
+            'ingredients.*.count' => ['integer', 'min:1'],
         ]);
 
         $fields = [
             'name' => $request->post('name'),
             'description' => $request->post('description'),
             'price' => $request->post('price'),
+            'kkal' => $request->post('kkal'),
+            'no_ingredients' => $request->post('no_ingredients', 0),
             'category_id' => $request->post('category_id'),
         ];
 
@@ -190,8 +209,8 @@ class ProductsController extends Controller
         if ($request->hasFile('photo')) {
             $this->savePhoto($id, $request->file('photo'));
         }
-        if ($request->has('ingredients')) {
-            ProductIngredient::query()->where('product_id', '=', $id)->delete();
+        ProductIngredient::query()->where('product_id', '=', $id)->delete();
+        if ($request->filled('ingredients')) {
 
             foreach ($request->post('ingredients') as $ingredient) {
                 $productIngredientFields = [

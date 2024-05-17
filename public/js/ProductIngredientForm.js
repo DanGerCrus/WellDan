@@ -33,10 +33,13 @@ class ProductIngredientForm {
                 const ingredientID = line.querySelector('#ingredient_id');
                 const count = line.querySelector('#ingredient_count');
                 const ingredientPrice = ingredientID.selectedOptions[0].getAttribute('data-price')
+                const ingredientKkal = ingredientID.selectedOptions[0].getAttribute('data-kkal')
                 const price = line.querySelector('#ingredient_price');
+                const kkal = line.querySelector('#ingredient_kkal');
                 ingredientID.addEventListener('change', (event) => ProductIngredientForm.refreshPrice(event));
                 count.addEventListener('change', (event) => ProductIngredientForm.refreshPrice(event));
                 price.innerHTML = +ingredientPrice * +count.value;
+                kkal.innerHTML = +(+ingredientKkal * +count.value).toFixed(2);
             })
         }
         if (inputCheckBox) {
@@ -102,7 +105,9 @@ class ProductIngredientForm {
         const ingredientID = clone.querySelector('#ingredient_id');
         const count = clone.querySelector('#ingredient_count');
         const ingredientPrice = ingredientID.selectedOptions[0].getAttribute('data-price')
+        const ingredientKkal = ingredientID.selectedOptions[0].getAttribute('data-kkal')
         const price = clone.querySelector('#ingredient_price');
+        const kkal = clone.querySelector('#ingredient_kkal');
         const addBtn = clone.querySelector(ProductIngredientForm.btnAddLineSelector);
         const removeBtn = clone.querySelector(ProductIngredientForm.btnRemoveLineSelector);
         clone.id = '';
@@ -120,6 +125,7 @@ class ProductIngredientForm {
             count.setAttribute('name', "products[" + productKey + "][ingredients][" + ProductIngredientForm.keyLine + "][count]");
         }
         price.innerHTML = +ingredientPrice * +count.value;
+        kkal.innerHTML = +(+ingredientKkal * +count.value).toFixed(2);
 
         return clone;
     }
@@ -129,9 +135,12 @@ class ProductIngredientForm {
         const line = ProductIngredientForm.getLine(event.target)
         const ingredientID = line.querySelector('#ingredient_id');
         const ingredientPrice = ingredientID.selectedOptions[0].getAttribute('data-price')
+        const ingredientKkal = ingredientID.selectedOptions[0].getAttribute('data-kkal')
         const count = line.querySelector('#ingredient_count');
         const price = line.querySelector('#ingredient_price');
+        const kkal = line.querySelector('#ingredient_kkal');
 
         price.innerHTML = +ingredientPrice * +count.value;
+        kkal.innerHTML = +(+ingredientKkal * +count.value).toFixed(2);
     }
 }

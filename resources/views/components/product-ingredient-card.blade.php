@@ -23,11 +23,11 @@
             name="{{$nameID}}"
             class="mt-1 block w-full"
             :data="$ingredients"
-            :additionalFields="['price']"
+            :additionalFields="['price', 'kkal']"
             :selected="!empty($ingredientID) ? $ingredientID : 0"
         />
     </div>
-    <span zclass="pt-4">x</span>
+    <span class="pt-4">x</span>
     <div>
         <x-input-label
             for="ingredient_count"
@@ -39,11 +39,15 @@
             type="number"
             class="mt-1 block w-full"
             min="0"
+            max="10"
             :value="isset($ingredientCount) ? $ingredientCount : 1"
         />
     </div>
     <span class="pt-4">=</span>
-    <span id="ingredient_price" class="pt-4">0</span><span class="pt-4">руб.</span>
+    <span id="ingredient_price" class="pt-4">0</span>
+    <span class="pl-2 pt-4">руб.</span>
+    <span id="ingredient_kkal" class="pl-2 pt-4">0</span>
+    <span class="pl-2 pt-4">ккал.</span>
 
     <div class="flex flex-row justify-end items-end">
         <x-green-button

@@ -20,6 +20,7 @@ class ProductFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'description' => $this->faker->text(),
+            'kkal' => $this->faker->randomFloat(2,10,1000),
             'price' => $this->faker->numberBetween(1000, 10000),
             'category_id' => ProductCategory::factory()->create()->id,
         ];

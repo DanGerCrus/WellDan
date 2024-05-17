@@ -46,6 +46,7 @@
                                 {{ __('Создать заказ') }}
                             </x-green-button>
                             <span id="order_price" class="pl-5">0</span><span class="pl-5">руб.</span>
+                            <span id="order_kkal" class="pl-5">0</span><span class="pl-5">ккал.</span>
 
                             @if (session('status') === 'basket-updated')
                                 <p

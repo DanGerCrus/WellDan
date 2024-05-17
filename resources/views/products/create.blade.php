@@ -10,6 +10,16 @@
         <div
                 class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6"
         >
+            @if (count($errors) > 0)
+                <div class="w-full px-10 py-5 bg-red-700">
+                    <strong>Whoops!</strong> Возникли проблемы с вашими данными.
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <section
                     class="max-w-4xl p-6 mx-auto bg-white rounded-md shadow-md"
             >
@@ -76,7 +86,6 @@
                                 class="mt-1 block w-full"
                                 min="0"
                                 required
-                                autofocus
                         />
                         <x-input-error
                                 class="mt-2"
@@ -97,7 +106,6 @@
                                 class="mt-1 block w-full"
                                 min="0"
                                 required
-                                autofocus
                         >
                         </x-textarea>
                         <x-input-error
@@ -124,7 +132,36 @@
                         />
                     </div>
 
-                    <div class="py-4">
+                    <div
+                        class="py-4"
+                    >
+                        <x-input-label
+                            for="kkal"
+                            :value="__('Калорийность')"
+                        />
+                        <x-text-input
+                            id="kkal"
+                            name="kkal"
+                            type="number"
+                            class="mt-1 block w-full"
+                            min="0"
+                            step=any
+                            required
+                        />
+                        <x-input-error
+                            class="mt-2"
+                            :messages="$errors->get('kkal')"
+                        />
+                    </div>
+
+                    <div class="my-2 flex flex-col">
+                        <x-input-label>
+                            <x-checkbox class="no_ingredients" name="no_ingredients" value="1"></x-checkbox>
+                            Нет ингредиентов
+                        </x-input-label>
+                    </div>
+
+                    <div class="py-4 ingredients_form">
                         <h1 class="font-semibold text-xl text-gray-800 leading-tight">Ингредиенты</h1>
 
                         <div class="py-4 flex flex-col justify-items-stretch container-line-Ingredient">
@@ -155,6 +192,7 @@
     </div>
 </x-app-layout>
 <script src="{{asset('/js/ProductIngredientForm.js')}}"></script>
+<script src="{{asset('/js/no_ingredients.js')}}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         new ProductIngredientForm();

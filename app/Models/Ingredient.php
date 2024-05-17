@@ -22,8 +22,9 @@ class Ingredient extends Model
                 'value' => '',
                 'label' => 'Не выбрано',
                 'price' => 0,
+                'kkal' => 0,
             ]
         ]);
-        return $result->merge(self::query()->select('id as value', 'name as label', 'price')->get());
+        return $result->merge(self::query()->select('id as value', 'name as label', 'price', 'kkal')->get());
     }
 }

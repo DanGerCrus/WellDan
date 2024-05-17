@@ -28,23 +28,39 @@
                     for="product_id"
                     :value="__('Товар')"
                 />
+                @php
+                    $display = 'block';
+                    if(!empty($blockAdd)) {
+                        $display = 'hidden';
+                    }
+                @endphp
                 <x-select
                     id="product_id"
                     name="products[{{$key}}][id]"
-                    class="mt-1 block w-full"
+                    class="mt-1 {{$display}} w-full "
                     :data="$products"
                     :selected="!empty($productID) ? $productID : 0"
-                    :additionalFields="['price']"
+                    :additionalFields="['price', 'kkal', 'no_ingredients']"
                     required
-                    :disabled="!empty($blockAdd) ? 1 : 0"
                 />
+                @if(!empty($blockAdd))
+                    <input type="hidden" name="products[{{$key}}][id]" value="{{$productID}}">
+                    @foreach($products as $product)
+                        @if($product->value === $productID)
+                            <span>{{$product->label}}</span>
+                        @endif
+                    @endforeach
+                @endif
             </div>
             <span class="pl-5 pt-4">=</span>
-            <span id="product_price" class="pl-5 pt-4">0</span><span class="pl-5 pt-4">руб.</span>
+            <span id="product_price" class="pl-5 pt-4">0</span>
+            <span class="pl-5 pt-4">руб.</span>
+            <span id="product_kkal" class="pl-2 pt-4">0</span>
+            <span class="pl-2 pt-4">ккал.</span>
         </div>
     </div>
 
-    <div class="py-4">
+    <div class="py-4 ingredients_form">
         <h1 class="font-semibold text-xl text-gray-800 leading-tight">Доп. ингридиенты</h1>
 
         <div class="py-4 flex flex-col justify-items-stretch container-line-Ingredient" data-productKey="{{$key}}">

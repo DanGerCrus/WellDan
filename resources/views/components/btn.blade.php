@@ -16,7 +16,7 @@
             $color['focus']='focus:border-green-900';
             $color['active']='active:bg-green-800';
             $color['ring']='ring-green-600';
-            $color['text']='text-black';
+            $color['text']='text-gray-50';
             break;
         case 'gray':
             $color['bg']='bg-gray-300';

@@ -32,6 +32,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Фирменный бургер кафе "Сытый Даня". 2 шрипролла в кунжунтой булочке с соусом Кам.',
                 'price' => 100,
                 'category_id' => 1,
+                'kkal' => 10.2,
                 'photo' => '/products/1/img.png',
             ],
             [
@@ -39,6 +40,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Фирменный твистер кафе "Сытый Даня". 2 шрипролла в абхазском лаваше с соусом 300Бакс.',
                 'price' => 1000,
                 'category_id' => 2,
+                'kkal' => 10.2,
                 'photo' => '/products/2/img.png',
             ],
             [
@@ -46,6 +48,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Фирменный рамен кафе "Сытый Даня". Наруто отдыхает.',
                 'price' => 1000,
                 'category_id' => 3,
+                'kkal' => 10.2,
                 'photo' => '/products/3/img.png',
             ],
         ];

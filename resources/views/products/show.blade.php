@@ -7,19 +7,21 @@
             <div
                 class="max-w-lg flex flex-col justify-center items-center py-4 lg:max-w-none lg:p-6 bg-white shadow-xl sm:rounded-lg">
                 <div class="flex flex-col justify-center items-start gap-2">
+                    <h2 class="text-2xl font-medium text-gray-900">{{$product->name}}</h2>
                     <img
                         class="max-w-lg"
                         src="{{$product->photo}}"
                         alt="{{$product->name}}"
                     >
-                    <x-item-p label="Название" value="{{$product->name}}"></x-item-p>
                     <x-item-p label="Описание">
                         <x-slot name="value">
                             {{$product->description}}
                         </x-slot>
                     </x-item-p>
                     <x-item-p label="Стоимость" value="{{$product->price}}"></x-item-p>
+                    <x-item-p label="Калории" value="{{$product->kkal}} ккал."></x-item-p>
                     <x-item-p label="Тип товара" value="{{$product->category->name}}"></x-item-p>
+                    @if(!empty($product->ingredients) && $product->ingredients->isNotEmpty())
                     <div class="text-gray-800">
                         <p class="font-bold">
                             Ингредиенты:
@@ -34,7 +36,7 @@
                             </p>
                         @endforeach
                     </div>
-
+                    @endif
                     <div class="flex flex-row w-full justify-center items-center gap-2">
                         @auth
                             <x-in-basket :id="$product->id" :route="route('products.show', $product->id)"></x-in-basket>

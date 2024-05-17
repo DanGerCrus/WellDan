@@ -7,6 +7,7 @@ use App\Http\OrderTrait;
 use App\Models\Ingredient;
 use App\Models\Order;
 use App\Models\OrderHasProduct;
+use App\Models\OrderHistory;
 use App\Models\OrderProductIngredient;
 use App\Models\OrderStatus;
 use App\Models\Product;
@@ -15,6 +16,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Carbon;
@@ -112,7 +114,7 @@ class OrderController extends Controller
             'products.*' => ['required', 'array'],
             'products.*.id' => ['required', 'integer', Rule::exists(Product::class, 'id')],
             'products.*.count' => ['required', 'integer', 'min:1'],
-            'products.*.ingredients' => ['required', 'array'],
+            'products.*.ingredients' => ['array'],
             'products.*.ingredients.*.id' => ['integer', 'nullable'],
             'products.*.ingredients.*.count' => ['integer'],
         ]);
@@ -123,7 +125,11 @@ class OrderController extends Controller
             'date_order' => Carbon::now()->toDateTime(),
         ];
 
-        $orderID = Order::query()->updateOrCreate(['id' => 0], $fields)->id;
+        $orderID = Order::query()->create($fields)->id;
+        OrderHistory::query()->create([
+            'order_id' => $orderID,
+            'status_id' => $fields['status_id'],
+        ]);
 
         foreach ($request->post('products') as $product) {
             $orderProductFields = [
@@ -133,15 +139,17 @@ class OrderController extends Controller
             ];
             $orderProductID = OrderHasProduct::query()->create($orderProductFields)->id;
             $ingredients = [];
-            foreach ($product['ingredients'] as $ingredient) {
-                if (!empty($ingredient['id']) && !empty($ingredient['count']) && !in_array($ingredient['id'], $ingredients)) {
-                    $orderProductIngredientFields = [
-                        'order_product_id' => $orderProductID,
-                        'ingredient_id' => $ingredient['id'],
-                        'count' => $ingredient['count'],
-                    ];
-                    $ingredients[] = $ingredient['id'];
-                    OrderProductIngredient::query()->create($orderProductIngredientFields);
+            if (!empty($product['ingredients'])) {
+                foreach ($product['ingredients'] as $ingredient) {
+                    if (!empty($ingredient['id']) && !empty($ingredient['count']) && !in_array($ingredient['id'], $ingredients)) {
+                        $orderProductIngredientFields = [
+                            'order_product_id' => $orderProductID,
+                            'ingredient_id' => $ingredient['id'],
+                            'count' => $ingredient['count'],
+                        ];
+                        $ingredients[] = $ingredient['id'];
+                        OrderProductIngredient::query()->create($orderProductIngredientFields);
+                    }
                 }
             }
         }
@@ -172,9 +180,19 @@ class OrderController extends Controller
             'products.product'
         )
             ->find($id);
+        $history = OrderHistory::query()
+            ->select(
+                'id',
+                'status_id',
+                DB::raw('DATE_FORMAT(created_at, "%d.%m.%Y %h:%i") as date'),
+            )
+            ->with('status')
+            ->orderBy('id', 'desc')
+            ->get();
 
         return response()->view('orders.show', [
             'order' => $order,
+            'history' => $history,
         ]);
     }
 
@@ -220,8 +238,15 @@ class OrderController extends Controller
         $fields = [
             'status_id' => $request->post('status_id'),
         ];
-
-        Order::find($id)->update($fields);
+        $order = Order::find($id);
+        $order->update($fields);
+        $orderHistory = OrderHistory::query()->where('order_id', $id)->orderBy('id', 'desc')->first();
+        if ($order->status_id !== $orderHistory->status_id) {
+            OrderHistory::query()->create([
+                'order_id' => $id,
+                'status_id' => $fields['status_id'],
+            ]);
+        }
 
         if ($request->has('products')) {
             $orderProductsID = OrderHasProduct::query()
@@ -241,15 +266,20 @@ class OrderController extends Controller
                 ];
                 $ingredients = [];
                 $orderProductID = OrderHasProduct::query()->create($orderProductFields)->id;
-                foreach ($product['ingredients'] as $ingredient) {
-                    if (!empty($ingredient['id']) && !empty($ingredient['count']) && !in_array($ingredient['id'], $ingredients)) {
-                        $orderProductIngredientFields = [
-                            'order_product_id' => $orderProductID,
-                            'ingredient_id' => $ingredient['id'],
-                            'count' => $ingredient['count'],
-                        ];
-                        $ingredients[] = $ingredient['id'];
-                        OrderProductIngredient::query()->create($orderProductIngredientFields);
+                if (!empty($product['ingredients'])) {
+                    foreach ($product['ingredients'] as $ingredient) {
+                        if (!empty($ingredient['id']) && !empty($ingredient['count']) && !in_array(
+                                $ingredient['id'],
+                                $ingredients
+                            )) {
+                            $orderProductIngredientFields = [
+                                'order_product_id' => $orderProductID,
+                                'ingredient_id' => $ingredient['id'],
+                                'count' => $ingredient['count'],
+                            ];
+                            $ingredients[] = $ingredient['id'];
+                            OrderProductIngredient::query()->create($orderProductIngredientFields);
+                        }
                     }
                 }
             }

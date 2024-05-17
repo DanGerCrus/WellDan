@@ -23,45 +23,49 @@
             </div>
             @auth
             <div class="hidden max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6" id="orders">
+                @can('order-edit')
                 <x-btn
                     body="success"
                     x-data=""
                     x-on:click.prevent="$dispatch('open-modal', 'order-create-modal')"
                 >{{ __('Создать заказ') }}</x-btn>
+                @endcan
                 <form method="GET" action="{{route('welcome')}}"
                       class="rounded-xl shadow bg-gray-100 p-4">
                     <input type="hidden" name="orders" value="1">
                     @include('orders.datatable-filters')
                 </form>
                 @include('orders.datatable')
-                <x-modal name="order-create-modal" focusable>
-                    <x-order-product-form key="0" clone="1" :products="$products_select"
-                                          :ingredients="$ingredients_select"></x-order-product-form>
-                    <x-product-ingredient-card productKey="0" key="0" clone="1"
-                                               :ingredients="$ingredients_select"></x-product-ingredient-card>
-                    <section
-                        class="max-w-4xl p-6 mx-auto bg-white rounded-md shadow-md"
-                    >
-                        <form method="post" action="{{ route('orders.store') }}">
-                            @csrf
-                            <input type="hidden" name="client_id" value="{{Auth::id()}}">
-                            <input type="hidden" name="welcome" value="1">
-                            <h1 class="font-semibold text-xl text-gray-800 leading-tight">Товары</h1>
-                            <div class="container-line-ProductOrder">
-                                <x-order-product-form key="0" :products="$products_select"
-                                                      :ingredients="$ingredients_select"></x-order-product-form>
-                            </div>
-                            <div
-                                class="flex items-center gap-4"
-                            >
-                                <x-primary-button>
-                                    {{ __('Сохранить') }}
-                                </x-primary-button>
-                                <span id="order_price" class="pl-5">0</span><span class="pl-5">руб.</span>
-                            </div>
-                        </form>
-                    </section>
-                </x-modal>
+                @can('order-edit')
+                    <x-modal name="order-create-modal" focusable>
+                        <x-order-product-form key="0" clone="1" :products="$products_select"
+                                              :ingredients="$ingredients_select"></x-order-product-form>
+                        <x-product-ingredient-card productKey="0" key="0" clone="1"
+                                                   :ingredients="$ingredients_select"></x-product-ingredient-card>
+                        <section
+                            class="max-w-4xl p-6 mx-auto bg-white rounded-md shadow-md"
+                        >
+                            <form method="post" action="{{ route('orders.store') }}">
+                                @csrf
+                                <input type="hidden" name="client_id" value="{{Auth::id()}}">
+                                <input type="hidden" name="welcome" value="1">
+                                <h1 class="font-semibold text-xl text-gray-800 leading-tight">Товары</h1>
+                                <div class="container-line-ProductOrder">
+                                    <x-order-product-form key="0" :products="$products_select"
+                                                          :ingredients="$ingredients_select"></x-order-product-form>
+                                </div>
+                                <div
+                                    class="flex items-center gap-4"
+                                >
+                                    <x-primary-button>
+                                        {{ __('Сохранить') }}
+                                    </x-primary-button>
+                                    <span id="order_price" class="pl-5">0</span><span class="pl-5">руб.</span>
+                                </div>
+                            </form>
+                        </section>
+                    </x-modal>
+                @endcan
             </div>
             @endauth
         </div>

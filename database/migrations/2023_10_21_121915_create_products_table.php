@@ -17,7 +17,9 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->text('description');
             $table->unsignedInteger('price');
+            $table->unsignedFloat('kkal');
             $table->unsignedBigInteger('category_id');
+            $table->boolean('no_ingredients')->default(false);
             $table->timestamps();
             $table->softDeletes();
 

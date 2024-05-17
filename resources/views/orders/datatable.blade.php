@@ -4,8 +4,10 @@
         <th class="w-2/12 border-2 border-gray-400 px-4 py-2">Дата</th>
         <th class="w-3/12 border-2 border-gray-400 px-4 py-2">Состав</th>
         <th class="w-2/12 border-2 border-gray-400 px-4 py-2">Статус</th>
+        @can('order-list')
         <th class="w-1/12 border-2 border-gray-400 px-4 py-2">Составил</th>
         <th class="w-1/12 border-2 border-gray-400 px-4 py-2">Клиент</th>
+        @endcan
         <th class="w-2/12 border-2 border-gray-400 px-4 py-2">Действия</th>
     </tr>
     @if(!empty($orders->items()))
@@ -34,8 +36,9 @@
                     @endforeach
                 </td>
                 <td class="border-2 border-gray-400 px-4 py-2">{{$order->status->name}}</td>
+                @can('order-list')
                 <td class="border-2 border-gray-400 px-4 py-2">
-                    @can('user_list')
+                    @can('user-list')
                         <x-a body="gray" href="{{ route('users.show', $order->creator->id) }}">
                             {{ $order->creator->last_name . ' ' . $order->creator->first_name . ' ' . $order->creator->father_name}}
                         </x-a>
@@ -45,7 +48,7 @@
                 </td>
                 <td class="border-2 border-gray-400 px-4 py-2">
                     @if(!empty($order->client))
-                        @can('user_list')
+                        @can('user-list')
                             <x-a body="gray" href="{{ route('users.show', $order->client->id) }}">
                                 {{ $order->client->last_name . ' ' . $order->client->first_name . ' ' . $order->client->father_name}}
                             </x-a>
@@ -56,6 +59,7 @@
                         <x-no-data font="font-normal"></x-no-data>
                     @endif
                 </td>
+                @endcan
                 <td class="border-2 border-gray-400 px-4 py-2">
                     <x-a
                         body="info"
