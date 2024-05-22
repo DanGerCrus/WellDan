@@ -55,35 +55,46 @@ class BasketController extends Controller
 
     public function update(Request $request): RedirectResponse
     {
-        $request->validate([
-            'products' => ['required', 'array'],
-            'products.*' => ['required', 'array'],
-            'products.*.id' => ['required', 'integer', Rule::exists(Product::class, 'id')],
-            'products.*.count' => ['required', 'integer', 'min:1'],
-            'products.*.ingredients' => ['required', 'array'],
-            'products.*.ingredients.*.id' => ['integer', 'nullable'],
-            'products.*.ingredients.*.count' => ['integer'],
-        ]);
-        $ownerID = Auth::id();
-        foreach ($request->post('products') as $product) {
-            $basketID = Basket::query()
-                ->where('owner_id', '=', $ownerID)
-                ->where('product_id', '=', $product['id'])
-                ->value('id');
+        if (!$request->has('products')) {
+            $ownerID = Auth::id();
             Basket::query()
-                ->where('id', '=', $basketID)
-                ->update([
-                    'count' => $product['count']
-                ]);
-            BasketIngredient::query()->where('basket_id', '=', $basketID)->delete();
-            foreach ($product['ingredients'] as $ingredient) {
-                if (!empty($ingredient['id']) && !empty($ingredient['count'])) {
-                    $basketIngredientFields = [
-                        'basket_id' => $basketID,
-                        'ingredient_id' => $ingredient['id'],
-                        'count' => $ingredient['count'],
-                    ];
-                    BasketIngredient::query()->create($basketIngredientFields);
+                ->where('owner_id', '=', $ownerID)
+                ->delete();
+        } else {
+            $request->validate([
+                'products' => ['required', 'array'],
+                'products.*' => ['required', 'array'],
+                'products.*.id' => ['required', 'integer', Rule::exists(Product::class, 'id')],
+                'products.*.count' => ['required', 'integer', 'min:1'],
+                'products.*.ingredients' => ['required', 'array'],
+                'products.*.ingredients.*.id' => ['integer', 'nullable'],
+                'products.*.ingredients.*.count' => ['integer'],
+            ]);
+            $ownerID = Auth::id();
+            Basket::query()
+                ->where('owner_id', '=', $ownerID)
+                ->delete();
+            foreach ($request->post('products') as $product) {
+                Basket::query()
+                    ->create([
+                        'owner_id' => $ownerID,
+                        'product_id' => $product['id'],
+                        'count' => $product['count']
+                    ]);
+                $basketID = Basket::query()
+                    ->where('owner_id', '=', $ownerID)
+                    ->where('product_id', '=', $product['id'])
+                    ->value('id');
+                BasketIngredient::query()->where('basket_id', '=', $basketID)->delete();
+                foreach ($product['ingredients'] as $ingredient) {
+                    if (!empty($ingredient['id']) && !empty($ingredient['count'])) {
+                        $basketIngredientFields = [
+                            'basket_id' => $basketID,
+                            'ingredient_id' => $ingredient['id'],
+                            'count' => $ingredient['count'],
+                        ];
+                        BasketIngredient::query()->create($basketIngredientFields);
+                    }
                 }
             }
         }

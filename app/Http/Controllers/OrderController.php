@@ -187,6 +187,7 @@ class OrderController extends Controller
                 DB::raw('DATE_FORMAT(created_at, "%d.%m.%Y %h:%i") as date'),
             )
             ->with('status')
+            ->where('order_id', '=', $order->id)
             ->orderBy('id', 'desc')
             ->get();
 

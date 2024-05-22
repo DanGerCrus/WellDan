@@ -79,6 +79,7 @@ class OrderForm {
     {
         const line = OrderForm.getLineOrder(event.target);
         line.remove()
+        OrderForm.refreshOrderPrice()
     }
 
     static getLineOrder(element)
