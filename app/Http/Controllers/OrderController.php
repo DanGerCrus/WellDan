@@ -241,7 +241,7 @@ class OrderController extends Controller
             'products.*' => ['required', 'array'],
             'products.*.id' => ['required', 'integer', Rule::exists(Product::class, 'id')],
             'products.*.count' => ['required', 'integer', 'min:1'],
-            'products.*.ingredients' => ['required', 'array'],
+            'products.*.ingredients' => ['array'],
             'products.*.ingredients.*.id' => ['integer', 'nullable'],
             'products.*.ingredients.*.count' => ['integer'],
         ]);
