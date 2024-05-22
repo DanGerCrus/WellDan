@@ -233,7 +233,7 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(Request $request, int $id): RedirectResponse
     {
         $request->validate([
             'status_id' => ['required', 'integer', Rule::exists(OrderStatus::class, 'id')],
@@ -249,7 +249,7 @@ class OrderController extends Controller
         $fields = [
             'status_id' => $request->post('status_id'),
         ];
-        $order = Order::findOrFail($id);
+        $order = Order::find($id);
         $order->update($fields);
         $orderHistory = OrderHistory::query()->where('order_id', $id)->orderBy('id', 'desc')->first();
         if ($order->status_id !== $orderHistory->status_id) {
