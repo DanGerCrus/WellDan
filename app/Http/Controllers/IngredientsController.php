@@ -75,8 +75,8 @@ class IngredientsController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'kkal' => ['required', 'numeric'],
-            'price' => ['required', 'integer'],
+            'kkal' => ['required', 'decimal:0,2', 'min:0'],
+            'price' => ['required', 'integer', 'min:1'],
         ]);
 
         $fields = [
@@ -121,8 +121,8 @@ class IngredientsController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'kkal' => ['required', 'numeric'],
-            'price' => ['required', 'integer'],
+            'kkal' => ['required', 'decimal:0,2', 'min:0'],
+            'price' => ['required', 'integer', 'min:1'],
         ]);
 
         $fields = [

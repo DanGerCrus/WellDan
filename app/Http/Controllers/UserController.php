@@ -42,6 +42,13 @@ class UserController extends Controller
         ],
     ];
 
+    public function __construct()
+    {
+        $this->middleware('permission:user-list|user-edit|user-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:user-edit', ['only' => ['create', 'store', 'edit', 'update']]);
+        $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *

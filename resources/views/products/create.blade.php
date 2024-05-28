@@ -144,7 +144,7 @@
                             name="kkal"
                             type="number"
                             class="mt-1 block w-full"
-                            min="0"
+                            min="1"
                             step=any
                             required
                         />

@@ -141,7 +141,7 @@ class OrderController extends Controller
             $ingredients = [];
             if (!empty($product['ingredients'])) {
                 foreach ($product['ingredients'] as $ingredient) {
-                    if (!empty($ingredient['id']) && !empty($ingredient['count']) && !in_array($ingredient['id'], $ingredients)) {
+                    if (!empty($ingredient['id']) && !empty($ingredient['count']) && $ingredient['count'] > 0 && !in_array($ingredient['id'], $ingredients)) {
                         $orderProductIngredientFields = [
                             'order_product_id' => $orderProductID,
                             'ingredient_id' => $ingredient['id'],
@@ -279,7 +279,7 @@ class OrderController extends Controller
                 $orderProductID = OrderHasProduct::query()->create($orderProductFields)->id;
                 if (!empty($product['ingredients'])) {
                     foreach ($product['ingredients'] as $ingredient) {
-                        if (!empty($ingredient['id']) && !empty($ingredient['count']) && !in_array(
+                        if (!empty($ingredient['id']) && !empty($ingredient['count']) && $ingredient['count'] > 0 && !in_array(
                                 $ingredient['id'],
                                 $ingredients
                             )) {

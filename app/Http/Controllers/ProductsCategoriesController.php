@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 
 class ProductsCategoriesController extends Controller
 {
@@ -66,7 +67,7 @@ class ProductsCategoriesController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', Rule::unique(ProductCategory::class, 'name')],
         ]);
 
         $fields = [
@@ -109,7 +110,7 @@ class ProductsCategoriesController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', Rule::unique(ProductCategory::class, 'name')->ignore($id)],
         ]);
 
         $fields = [
