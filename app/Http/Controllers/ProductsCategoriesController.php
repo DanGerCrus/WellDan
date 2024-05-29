@@ -127,7 +127,10 @@ class ProductsCategoriesController extends Controller
      */
     public function destroy(string $id): RedirectResponse
     {
-        Product::where('category_id', '=', $id)->delete();
+        $check = Product::where('category_id', '=', $id)->value('id');
+        if (!empty($check)) {
+            return redirect()->route('categories.index')->with('error', 'Нельзя удалить');
+        }
         ProductCategory::findOrFail($id)->delete();
 
         return redirect()->route('categories.index');

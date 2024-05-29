@@ -188,7 +188,6 @@ class OrderController extends Controller
             )
             ->with('status')
             ->where('order_id', '=', $order->id)
-            ->orderBy('id', 'desc')
             ->get();
 
         return response()->view('orders.show', [

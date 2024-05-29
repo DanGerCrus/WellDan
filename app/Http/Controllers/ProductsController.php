@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\FilterTrait;
 use App\Http\OrderTrait;
 use App\Models\Ingredient;
+use App\Models\OrderHasProduct;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductIngredient;
@@ -107,7 +108,7 @@ class ProductsController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', Rule::unique(Product::class, 'name')],
             'description' => ['required', 'string'],
             'price' => ['required', 'integer', 'min:1'],
             'kkal' => ['required', 'decimal:0,2', 'min:0'],
@@ -185,7 +186,7 @@ class ProductsController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', Rule::unique(Product::class, 'name')->ignore($id)],
             'description' => ['required', 'string'],
             'price' => ['required', 'integer', 'min:1'],
             'kkal' => ['required', 'decimal:0,2', 'min:0'],
@@ -235,6 +236,10 @@ class ProductsController extends Controller
      */
     public function destroy(string $id): RedirectResponse
     {
+        $check = OrderHasProduct::query()->where('product_id', '=', $id)->value('id');
+        if (!empty($check)) {
+            return redirect()->route('products.index')->with('error', 'Нельзя удалить');
+        }
         Product::findOrFail($id)->delete();
 
         return redirect()->route('products.index');

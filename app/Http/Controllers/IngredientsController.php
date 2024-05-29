@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\FilterTrait;
 use App\Http\OrderTrait;
 use App\Models\Ingredient;
+use App\Models\ProductIngredient;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 
 class IngredientsController extends Controller
 {
@@ -74,7 +77,7 @@ class IngredientsController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', Rule::unique(Ingredient::class, 'name')],
             'kkal' => ['required', 'decimal:0,2', 'min:0'],
             'price' => ['required', 'integer', 'min:1'],
         ]);
@@ -120,7 +123,7 @@ class IngredientsController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', Rule::unique(Ingredient::class, 'name')->ignore($id)],
             'kkal' => ['required', 'decimal:0,2', 'min:0'],
             'price' => ['required', 'integer', 'min:1'],
         ]);
@@ -141,6 +144,11 @@ class IngredientsController extends Controller
      */
     public function destroy(string $id): RedirectResponse
     {
+        $check = ProductIngredient::query()->where('ingredient_id', $id)->value('id');
+        if (!empty($check)) {
+            return redirect()->route('ingredients.index')->with('error', 'Нельзя удалить');
+        }
+
         Ingredient::findOrFail($id)->delete();
 
         return redirect()->route('ingredients.index');
