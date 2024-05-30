@@ -251,7 +251,7 @@ class OrderController extends Controller
         $order = Order::find($id);
         $order->update($fields);
         $orderHistory = OrderHistory::query()->where('order_id', $id)->orderBy('id', 'desc')->first();
-        if ($order->status_id !== $orderHistory->status_id) {
+        if (empty($orderHistory) || $order->status_id !== $orderHistory->status_id) {
             OrderHistory::query()->create([
                 'order_id' => $id,
                 'status_id' => $fields['status_id'],
