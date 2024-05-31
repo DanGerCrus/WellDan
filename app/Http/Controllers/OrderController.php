@@ -126,9 +126,10 @@ class OrderController extends Controller
         ];
 
         $orderID = Order::query()->create($fields)->id;
-        OrderHistory::query()->create([
+        OrderHistory::query()->insert([
             'order_id' => $orderID,
             'status_id' => $fields['status_id'],
+            'created_at' => Carbon::now()->toDateTime(),
         ]);
 
         foreach ($request->post('products') as $product) {
@@ -252,9 +253,10 @@ class OrderController extends Controller
         $order->update($fields);
         $orderHistory = OrderHistory::query()->where('order_id', $id)->orderBy('id', 'desc')->first();
         if (empty($orderHistory) || $order->status_id !== $orderHistory->status_id) {
-            OrderHistory::query()->create([
+            OrderHistory::query()->insert([
                 'order_id' => $id,
                 'status_id' => $fields['status_id'],
+                'created_at' => Carbon::now()->toDateTime(),
             ]);
         }
 
@@ -315,6 +317,12 @@ class OrderController extends Controller
             'client_id' => $order->client_id,
             'date_order' => Carbon::now()->toDateTime(),
         ])->id;
+
+        OrderHistory::query()->insert([
+            'order_id' => $repeatID,
+            'status_id' => 1,
+            'created_at' => Carbon::now()->toDateTime(),
+        ]);
 
         if (!empty($order->products) && $order->products->isNotEmpty()) {
             foreach ($order->products as $product) {
