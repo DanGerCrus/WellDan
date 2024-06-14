@@ -84,7 +84,8 @@
                                 name="price"
                                 type="number"
                                 class="mt-1 block w-full"
-                                min="0"
+                                min="0.01"
+                                step="0.01"
                                 required
                         />
                         <x-input-error

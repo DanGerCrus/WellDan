@@ -139,7 +139,7 @@
                     @foreach ($history as $key => $row)
                         <tr>
                             <td class="border-2 border-gray-400 px-4 py-2">{{ ++$key }}</td>
-                            <td class="border-2 border-gray-400 px-4 py-2">{{ $row->date}}</td>
+                            <td class="border-2 border-gray-400 px-4 py-2">{{ \Carbon\Carbon::parse($row->date)->format('d.m.Y H:i:s')}}</td>
                             <td class="border-2 border-gray-400 px-4 py-2">{{ $row->status->name }}</td>
                         </tr>
                     @endforeach

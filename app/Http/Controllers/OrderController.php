@@ -122,14 +122,14 @@ class OrderController extends Controller
             'status_id' => 1,
             'creator_id' => Auth::user()->id,
             'client_id' => $request->post('client_id'),
-            'date_order' => Carbon::now()->toDateTime(),
+            'date_order' => Carbon::now()->toDateTimeString(),
         ];
 
         $orderID = Order::query()->create($fields)->id;
         OrderHistory::query()->insert([
             'order_id' => $orderID,
             'status_id' => $fields['status_id'],
-            'created_at' => Carbon::now()->toDateTime(),
+            'created_at' => Carbon::now()->toDateTimeString(),
         ]);
 
         foreach ($request->post('products') as $product) {
@@ -185,7 +185,7 @@ class OrderController extends Controller
             ->select(
                 'id',
                 'status_id',
-                DB::raw('DATE_FORMAT(created_at, "%d.%m.%Y %h:%i") as date'),
+                'created_at as date'
             )
             ->with('status')
             ->where('order_id', '=', $order->id)
@@ -256,7 +256,7 @@ class OrderController extends Controller
             OrderHistory::query()->insert([
                 'order_id' => $id,
                 'status_id' => $fields['status_id'],
-                'created_at' => Carbon::now()->toDateTime(),
+                'created_at' => Carbon::now()->toDateTimeString(),
             ]);
         }
 
@@ -315,13 +315,13 @@ class OrderController extends Controller
             'status_id' => 1,
             'creator_id' => Auth::user()->id,
             'client_id' => $order->client_id,
-            'date_order' => Carbon::now()->toDateTime(),
+            'date_order' => Carbon::now()->toDateTimeString(),
         ])->id;
 
         OrderHistory::query()->insert([
             'order_id' => $repeatID,
             'status_id' => 1,
-            'created_at' => Carbon::now()->toDateTime(),
+            'created_at' => Carbon::now()->toDateTimeString(),
         ]);
 
         if (!empty($order->products) && $order->products->isNotEmpty()) {
